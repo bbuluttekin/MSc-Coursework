@@ -1,14 +1,16 @@
 ---
-Full_name: Baran Buluttekin
-output:
-  pdf_document: default
-programme: MSc Data Science
-student_id: 13153116
+title: Coursework 1
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Big Data Analytics using R
+
+- **Full Name:** Baran Buluttekin
+- **Programme:** MSc Data Science
+- **Student ID:** 13153116
 
 1. Statistical learning methods 
 
@@ -29,23 +31,118 @@ Written exam results: 2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4.
 
 (a) Use R to calculate the mean, the mode, the median, the variance and the standard deviation of the oral and written exams separately and together as well.  
 ```{r}
-oral<-c(4, 1, 4, 5, 3, 2, 3, 4, 3, 5, 2, 2, 4, 3, 5, 5, 1, 1, 1, 2)
-written<-c(2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4)
-oral_mean<-mean(oral)
-written_mean<-mean(written)
-combined_mean<-mean(oral + written)
+oral_exam <- c(4, 1, 4, 5, 3, 2, 3, 4, 3, 5, 2, 2, 4, 3, 5, 5, 1, 1, 1, 2)
+written_exam <- c(2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4)
+oral_mean <- mean(oral_exam)
+written_mean <- mean(written_exam)
+combined_mean <- mean(oral_exam + written_exam)
+combined_mean
+```
+```{r}
+written_mean <- mean(written_exam)
+written_mean
+```
+```{r}
+together_mean <- mean(oral_exam + written_exam)
+together_mean
 ```
 
-(b) Find the covariance and correlation between the oral and written exam scores.  
-(c) Is there a positive or negative or no correlation between the two?  
-(d) Is there causation between the two? Justify your answers.  
+(b) Find the covariance and correlation between the oral and written exam scores.
+```{r}
+cor(oral_exam, written_exam)
+```
+
+(c) Is there a positive or negative or no correlation between the two? 
+
+Its negative correlation.
+
+(d) Is there causation between the two? Justify your answers.
+
 
 3. Descriptive analysis 
 This exercise involves the Auto data set studied in the class. Make sure that the missing values have been removed from the data.
 (a) Which of the predictors are quantitative, and which are qualitative?
+
+Let's examine the data with str() and look at the first 6 instances with head() function.
+```{r}
+library("ISLR")
+str(Auto)
+```
+```{r}
+head(Auto)
+```
+Auto$name: Nominal
+
+Auto$cylinders: Ordial
+
+Auto$displacement: Ratio
+
+Auto$acceleration: Ratio
+
+Auto$origin:Ordial
+
+Auto$horsepower: Ratio
+
+Auto$weight: Ratio
+
+Auto$year: Interval
+
+Auto$mpg: Ratio
+
+Overall:
+
+Qualitative: name, year, origin, cylinders
+
+Quantitative: displacement, acceleration, horsepower, weight, mpg 
+
 (b) What is the range of each quantitative predictor? You can answer this using the range() function.
+```{r}
+range(Auto$displacement)
+```
+```{r}
+range(Auto$acceleration)
+```
+```{r}
+range(Auto$horsepower)
+```
+```{r}
+range(Auto$weight)
+```
+```{r}
+range(Auto$mpg)
+```
+
 (c) What is the mean and standard deviation of each quantitative predictor?
+```{r}
+print(paste0("Mean: ", mean(Auto$displacement)))
+print(paste0("Standard deviation: ", sd(Auto$displacement)))
+```
+```{r}
+print(paste0("Mean: ", mean(Auto$acceleration)))
+print(paste0("Standard deviation: ", sd(Auto$acceleration)))
+```
+```{r}
+print(paste0("Mean: ", mean(Auto$horsepower)))
+print(paste0("Standard deviation: ", sd(Auto$horsepower)))
+```
+```{r}
+print(paste0("Mean: ", mean(Auto$weight)))
+print(paste0("Standard deviation: ", sd(Auto$weight)))
+```
+```{r}
+print(paste0("Mean: ", mean(Auto$mpg)))
+print(paste0("Standard deviation: ", sd(Auto$mpg)))
+```
+
 (d) Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?  
+```{r}
+modified_Auto <- Auto[-c(10:85), ]
+modified_Auto <- modified_Auto[c(1,3,4,5,6)]
+colMeans(modified_Auto)
+sapply(modified_Auto, sd)
+```
+
+
 (e) Using the full data set, investigate the predictors graphically, using scatterplots or other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings.
 (f) Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables. Do your plots suggest that any of the other variables might be useful in predicting mpg? Justify your answer.
 
