@@ -12,24 +12,24 @@ knitr::opts_chunk$set(echo = TRUE)
 - **Programme:** MSc Data Science
 - **Student ID:** 13153116
 
-1. Statistical learning methods 
+####1. Statistical learning methods 
 
 For each of parts (a) through (d), indicate whether we would generally expect the performance of a flexible
 statistical learning method to be better or worse than an inflexible method. Justify your answer. 
 
-(a) The sample size n is extremely large, and the number of predictors p is small.  
-(b) The number of predictors p is extremely large, and the number of observations n is small.   
-(c) The relationship between the predictors and response is highly non-linear.  
-(d) The variance of the error terms, i.e. σ2 = Var(ε), is extremely high.  
+#####(a) The sample size n is extremely large, and the number of predictors p is small.  
+#####(b) The number of predictors p is extremely large, and the number of observations n is small.   
+#####(c) The relationship between the predictors and response is highly non-linear.  
+#####(d) The variance of the error terms, i.e. σ2 = Var(ε), is extremely high.  
 
-2. Descriptive analysis 
+####2. Descriptive analysis 
 
 In a higher educational institution the comprehensive applied mathematics exam is comprised of two parts. On the first day, 20 students took the exam, the results of which are presented below:  
 
 Oral exam results: 4, 1, 4, 5, 3, 2, 3, 4, 3, 5, 2, 2, 4, 3, 5, 5, 1, 1, 1, 2.  
 Written exam results: 2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4.
 
-(a) Use R to calculate the mean, the mode, the median, the variance and the standard deviation of the oral and written exams separately and together as well.  
+#####(a) Use R to calculate the mean, the mode, the median, the variance and the standard deviation of the oral and written exams separately and together as well.  
 ```{r}
 oral_exam <- c(4, 1, 4, 5, 3, 2, 3, 4, 3, 5, 2, 2, 4, 3, 5, 5, 1, 1, 1, 2)
 written_exam <- c(2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4)
@@ -47,21 +47,21 @@ together_mean <- mean(oral_exam + written_exam)
 together_mean
 ```
 
-(b) Find the covariance and correlation between the oral and written exam scores.
+#####(b) Find the covariance and correlation between the oral and written exam scores.
 ```{r}
 cor(oral_exam, written_exam)
 ```
 
-(c) Is there a positive or negative or no correlation between the two? 
+#####(c) Is there a positive or negative or no correlation between the two? 
 
 Its negative correlation.
 
-(d) Is there causation between the two? Justify your answers.
+#####(d) Is there causation between the two? Justify your answers.
 
 
-3. Descriptive analysis 
+####3. Descriptive analysis 
 This exercise involves the Auto data set studied in the class. Make sure that the missing values have been removed from the data.
-(a) Which of the predictors are quantitative, and which are qualitative?
+#####(a) Which of the predictors are quantitative, and which are qualitative?
 
 Let's examine the data with str() and look at the first 6 instances with head() function.
 ```{r}
@@ -95,7 +95,7 @@ Qualitative: name, year, origin, cylinders
 
 Quantitative: displacement, acceleration, horsepower, weight, mpg 
 
-(b) What is the range of each quantitative predictor? You can answer this using the range() function.
+#####(b) What is the range of each quantitative predictor? You can answer this using the range() function.
 ```{r}
 range(Auto$displacement)
 ```
@@ -112,7 +112,7 @@ range(Auto$weight)
 range(Auto$mpg)
 ```
 
-(c) What is the mean and standard deviation of each quantitative predictor?
+#####(c) What is the mean and standard deviation of each quantitative predictor?
 ```{r}
 print(paste0("Mean: ", mean(Auto$displacement)))
 print(paste0("Standard deviation: ", sd(Auto$displacement)))
@@ -134,7 +134,7 @@ print(paste0("Mean: ", mean(Auto$mpg)))
 print(paste0("Standard deviation: ", sd(Auto$mpg)))
 ```
 
-(d) Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?  
+#####(d) Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?  
 ```{r}
 modified_Auto <- Auto[-c(10:85), ]
 modified_Auto <- modified_Auto[c(1,3,4,5,6)]
@@ -143,36 +143,81 @@ sapply(modified_Auto, sd)
 ```
 
 
-(e) Using the full data set, investigate the predictors graphically, using scatterplots or other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings.
-(f) Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables. Do your plots suggest that any of the other variables might be useful in predicting mpg? Justify your answer.
+#####(e) Using the full data set, investigate the predictors graphically, using scatterplots or other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings.
+```{r}
+pairs(Auto)
+```
 
-4. Linear regression 
+From the graph horsepower, displacement and weight appear to have a linear relationship.
+
+#####(f) Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables. Do your plots suggest that any of the other variables might be useful in predicting mpg? Justify your answer.
+
+According to graph predictors that looks to have relationship with mpg are:
+horsepower
+```{r}
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG")
+```
+Weight
+```{r}
+plot(Auto$weight, Auto$mpg, xlab = "Weight", ylab = "MPG")
+```
+Displacement
+```{r}
+plot(Auto$displacement, Auto$mpg, xlab = "Displacement", ylab = "MPG")
+```
+
+####4. Linear regression 
 This question involves the use of simple linear regression on the Auto data set.
-(a) Use the lm() function to perform a simple linear regression with mpg as the response and horsepower as the predictor. Use the summary() function to print the results. Comment on the output. For example:
 
-i. Is there a relationship between the predictor and the response?  
+#####(a) Use the lm() function to perform a simple linear regression with mpg as the response and horsepower as the predictor. Use the summary() function to print the results. Comment on the output. For example:
 
-ii. How strong is the relationship between the predictor and the response?  
+*i. Is there a relationship between the predictor and the response?*
 
-iii. Is the relationship between the predictor and the response positive or negative?  
+```{r}
+lm.fit <- lm(mpg ~ horsepower, data = Auto)
+summary(lm.fit)
+```
 
-iv. What is the predicted mpg associated with a horsepower of 98? What are the associated 95% confidence and prediction intervals?  
+There is a weak inverse relationship between mpg and horsepower as the least square line have a -0.157845 slope.
 
-(b) Plot the response and the predictor. Use the abline() function to display the least squares regression line.  
+*ii. How strong is the relationship between the predictor and the response?*  
 
-(c) Plot the 95% confidence interval and prediction interval in the same plot as (b) using different colours and legends.  
+There is a weak relationship between predictor and response as every increase to predictor will result a decrease of 0.157845 in prediction of response.
 
-5. Logistic regression
+*iii. Is the relationship between the predictor and the response positive or negative?*  
+
+
+
+*iv. What is the predicted mpg associated with a horsepower of 98? What are the associated 95% confidence and prediction intervals?*  
+
+#####(b) Plot the response and the predictor. Use the abline() function to display the least squares regression line.  
+```{r}
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower")
+abline(lm.fit, col= 'red')
+```
+
+
+#####(c) Plot the 95% confidence interval and prediction interval in the same plot as (b) using different colours and legends.  
+```{r}
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower with 95% confidence interval")
+abline(lm.fit, col= 'lightblue')
+new_x <- seq(min(Auto$horsepower), max(Auto$horsepower), by = 0.05)
+conf_inteval <- predict(lm.fit, newdata = data.frame(horsepower=new_x), interval = "confidence", level = 0.95)
+lines(new_x, conf_inteval[,2], col = "red", lty=2)
+lines(new_x, conf_inteval[,3], col = "red", lty=2)
+```
+
+####5. Logistic regression
 Using the Boston data set, fit classification models in order to predict whether a given suburb has a crime rate above or below the median. Explore logistic regression models using various subsets of the predictors. Describe your findings.  
 
-6. Resampling methods  
+####6. Resampling methods  
 
 Suppose that we use some statistical learning method to make a prediction for the response Y for a particular value of the predictor X. Carefully describe how we might estimate the standard deviation of our prediction.  
 
-7. Resampling methods
+####7. Resampling methods
 We will now perform cross-validation on a simulated data set.  
 
-(a) Generate a simulated data set as follows:  
+#####(a) Generate a simulated data set as follows:  
 ```{r}
 set.seed(500)
 y = rnorm(500)
@@ -182,9 +227,9 @@ y = x - 2*x^2 + 3*x^4 + rnorm(500)
 
 In this data set, what is n and what is p? Write out the model used to generate the data in equation form.
 
-(b) Create a scatterplot of X against Y. Comment on what you find.  
+#####(b) Create a scatterplot of X against Y. Comment on what you find.  
 
-(c) Set the seed to be 23, and then compute the LOOCV and 10-fold CV errors that result from fitting the following four models using least squares:
+#####(c) Set the seed to be 23, and then compute the LOOCV and 10-fold CV errors that result from fitting the following four models using least squares:
 i. Y = β0 + β1X + ε
 ii. Y =β0 +β1X+β2X2 +ε
 iii. Y =β0 +β1X+β2X2 +β3X3 +ε
@@ -192,8 +237,8 @@ iv. Y =β0 +β1X+β2X2 +β3X3 +β4X4 +ε.
 
 Note you may find it helpful to use the data.frame() function to create a single data set containing both X and Y.  
 
-(d) Repeat (c) using random seed 46, and report your results. Are your results the same as what you got in (c)? Why?  
+#####(d) Repeat (c) using random seed 46, and report your results. Are your results the same as what you got in (c)? Why?  
 
-(e) Which of the models in (c) had the smallest LOOCV and 10-fold CV error? Is this what you expected? Explain your answer.  
+#####(e) Which of the models in (c) had the smallest LOOCV and 10-fold CV error? Is this what you expected? Explain your answer.  
 
-(f) Comment on the statistical significance of the coefficient estimates that results from fitting each of the models in (c) using least squares. Do these results agree with the conclusions drawn based on the cross-validation results?
+#####(f) Comment on the statistical significance of the coefficient estimates that results from fitting each of the models in (c) using least squares. Do these results agree with the conclusions drawn based on the cross-validation results?
