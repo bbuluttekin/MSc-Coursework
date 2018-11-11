@@ -199,16 +199,66 @@ abline(lm.fit, col= 'red')
 
 #####(c) Plot the 95% confidence interval and prediction interval in the same plot as (b) using different colours and legends.  
 ```{r}
-plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower with 95% confidence interval")
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower with 95% confidence interval", pch = 19)
 abline(lm.fit, col= 'lightblue')
 new_x <- seq(min(Auto$horsepower), max(Auto$horsepower), by = 0.05)
 conf_inteval <- predict(lm.fit, newdata = data.frame(horsepower=new_x), interval = "confidence", level = 0.95)
 lines(new_x, conf_inteval[,2], col = "red", lty=2)
 lines(new_x, conf_inteval[,3], col = "red", lty=2)
+legend("topright", col = c("black", "lightblue", "red"), legend = c("Data Points", "Prediction Line", "confidence interval"), pch = c(19, NA, NA), lty = c(NA, 1, 2))
 ```
 
 ####5. Logistic regression
 Using the Boston data set, fit classification models in order to predict whether a given suburb has a crime rate above or below the median. Explore logistic regression models using various subsets of the predictors. Describe your findings.  
+```{r}
+library("MASS")
+median_crime <- median(Boston$crim)
+median_crime
+```
+First I will create new response variable called "highcrim" and populate it with TRUE if crime rate is above median and FALSE if its below median.
+```{r}
+Boston$highcrim <- Boston$crim > median_crime
+head(Boston)
+```
+We can first create logistic regression model with all the predictors (except crim) and observe which predictors have high importance.
+```{r}
+glm.fit <- glm(highcrim ~ . -crim, data = Boston, family = "binomial")
+summary(glm.fit)
+```
+Statisticly high importance predictors are the ones with large z-statistics and small p-values (<0.05).
+Some of these variables are:
+nox
+rad
+dis
+ptratio
+mdv
+It is usually good practice to visulise these variables to confirm the relationship.
+I will choose variable dis to demonstrade.
+```{r}
+plot(Boston$dis, Boston$crim, main = "Crime rate versus distance to employment center", xlab = "Distance to employment Center", ylab = "Crime rate")
+```
+Relationship between the two looks logarithmmic, in fact log transfor of two resables linear relationship.
+```{r}
+plot(log(Boston$dis), log(Boston$crim), main = "Log tranform relationship", xlab = "Distance to employment center (Log)", ylab = "Crime rate (Log)")
+```
+
+We can refit a model with selected predictors and observe the predictions.
+```{r}
+selected.glm <- glm(highcrim ~nox + rad + dis + ptratio + medv , data = Boston, family = "binomial")
+first_model_prob <- predict(glm.fit, type = "response")
+first_model <- rep(1, nrow(Boston))
+first_model[first_model_prob < 0.5] <- 0
+second_model_prob <- predict(selected.glm, type = "response")
+second_model <- rep(1, nrow(Boston))
+second_model[second_model_prob < 0.5] <- 0
+```
+```{r}
+table(first_model, Boston$highcrim)
+```
+```{r}
+table(second_model, Boston$highcrim)
+```
+Although false positives decline with new selected features false negative seen an increse, overall model performance did not changed significantly.
 
 ####6. Resampling methods  
 
