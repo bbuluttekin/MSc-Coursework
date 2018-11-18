@@ -17,10 +17,22 @@ knitr::opts_chunk$set(echo = TRUE)
 For each of parts (a) through (d), indicate whether we would generally expect the performance of a flexible
 statistical learning method to be better or worse than an inflexible method. Justify your answer. 
 
-#####(a) The sample size n is extremely large, and the number of predictors p is small.  
+#####(a) The sample size n is extremely large, and the number of predictors p is small. 
+
+Better - I think that a more flexible model can fit the data closer without overfiting it, because of the large number of observations.
+
+
 #####(b) The number of predictors p is extremely large, and the number of observations n is small.   
-#####(c) The relationship between the predictors and response is highly non-linear.  
+
+Worse - With few data, flexable method would overfit the small number of observations.
+
+#####(c) The relationship between the predictors and response is highly non-linear. 
+
+Better - Given that more degrees of freedom, a flexible model will fit the data better.
+
 #####(d) The variance of the error terms, i.e. σ2 = Var(ε), is extremely high.  
+
+Worse - Flexible method will try to fit the noise and error-term also increases the variance.
 
 ####2. Descriptive analysis 
 
@@ -36,7 +48,7 @@ written_exam <- c(2,3,1,4,2,5,3,1,2,1,2,2,1,1,2,3,1,2,3,4)
 oral_mean <- mean(oral_exam)
 written_mean <- mean(written_exam)
 combined_mean <- mean(oral_exam + written_exam)
-combined_mean
+oral_mean
 ```
 ```{r}
 written_mean <- mean(written_exam)
@@ -46,21 +58,47 @@ written_mean
 together_mean <- mean(oral_exam + written_exam)
 together_mean
 ```
+```{r}
+print(paste("Oral median is,", median(oral_exam)))
+print(paste("Written median is,", median(written_exam)))
+print(paste("Combined median is,", median(oral_exam + written_exam)))
+```
+```{r}
+get_mode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+print(paste("Oral mode is,", get_mode(oral_exam)))
+print(paste("Written mode is,", get_mode(written_exam)))
+print(paste("Combined mode is,", get_mode(oral_exam + written_exam)))
+```
+```{r}
+print(paste("Variance for Oral exam is,", var(oral_exam)))
+print(paste("Variance for Written exam is,", var(written_exam)))
+print(paste("Variance for Combined exam is,", var(oral_exam + written_exam)))
+```
+```{r}
+print(paste("Standard deviation for Oral exam is,", sd(oral_exam)))
+print(paste("Standard deviation for Written exam is,", sd(written_exam)))
+print(paste("Standard deviation for Combined exam is,", sd(oral_exam + written_exam)))
+```
 
 #####(b) Find the covariance and correlation between the oral and written exam scores.
 ```{r}
-cor(oral_exam, written_exam)
+print(paste("Covariance is,", cov(oral_exam, written_exam)))
+print(paste("Correlation is,", cor(oral_exam, written_exam)))
 ```
 
 #####(c) Is there a positive or negative or no correlation between the two? 
 
-Its negative correlation.
+Correlation found in section b above is -0.18695. It shows weak negative correlation.
 
 #####(d) Is there causation between the two? Justify your answers.
-
+Correlation is not an indication of causation. We need to examine relationship with other means such as A/B test.
 
 ####3. Descriptive analysis 
 This exercise involves the Auto data set studied in the class. Make sure that the missing values have been removed from the data.
+
 #####(a) Which of the predictors are quantitative, and which are qualitative?
 
 Let's examine the data with str() and look at the first 6 instances with head() function.
@@ -71,73 +109,36 @@ str(Auto)
 ```{r}
 head(Auto)
 ```
-Auto$name: Nominal
+```{r}
+sum(is.na(Auto))
+```
+Getting 0 result from `sum(is.na(Auto))` indicates that there is no missing values in data.
 
-Auto$cylinders: Ordial
+Qualitative: origin, name
 
-Auto$displacement: Ratio
-
-Auto$acceleration: Ratio
-
-Auto$origin:Ordial
-
-Auto$horsepower: Ratio
-
-Auto$weight: Ratio
-
-Auto$year: Interval
-
-Auto$mpg: Ratio
-
-Overall:
-
-Qualitative: name, year, origin, cylinders
-
-Quantitative: displacement, acceleration, horsepower, weight, mpg 
+Quantitative: mpg, cylinders, displacement, horsepower, weight, acceleration, year
 
 #####(b) What is the range of each quantitative predictor? You can answer this using the range() function.
 ```{r}
-range(Auto$displacement)
-```
-```{r}
-range(Auto$acceleration)
-```
-```{r}
-range(Auto$horsepower)
-```
-```{r}
-range(Auto$weight)
-```
-```{r}
-range(Auto$mpg)
+sapply(Auto[c(1:7)], range)
 ```
 
+
 #####(c) What is the mean and standard deviation of each quantitative predictor?
+Mean:
 ```{r}
-print(paste0("Mean: ", mean(Auto$displacement)))
-print(paste0("Standard deviation: ", sd(Auto$displacement)))
+sapply(Auto[c(1:7)], mean)
 ```
+Standard deviaton:
 ```{r}
-print(paste0("Mean: ", mean(Auto$acceleration)))
-print(paste0("Standard deviation: ", sd(Auto$acceleration)))
+sapply(Auto[c(1:7)], sd)
 ```
-```{r}
-print(paste0("Mean: ", mean(Auto$horsepower)))
-print(paste0("Standard deviation: ", sd(Auto$horsepower)))
-```
-```{r}
-print(paste0("Mean: ", mean(Auto$weight)))
-print(paste0("Standard deviation: ", sd(Auto$weight)))
-```
-```{r}
-print(paste0("Mean: ", mean(Auto$mpg)))
-print(paste0("Standard deviation: ", sd(Auto$mpg)))
-```
+
 
 #####(d) Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?  
 ```{r}
 modified_Auto <- Auto[-c(10:85), ]
-modified_Auto <- modified_Auto[c(1,3,4,5,6)]
+modified_Auto <- modified_Auto[c(1:7)]
 colMeans(modified_Auto)
 sapply(modified_Auto, sd)
 ```
@@ -186,20 +187,25 @@ There is a weak relationship between predictor and response as every increase to
 
 *iii. Is the relationship between the predictor and the response positive or negative?*  
 
-
+Negative
 
 *iv. What is the predicted mpg associated with a horsepower of 98? What are the associated 95% confidence and prediction intervals?*  
+```{r}
+print(paste("Confidence interval,", predict(lm.fit, data.frame(horsepower=98), interval="confidence")))
+print(paste("Prediction from model,", predict(lm.fit, data.frame(horsepower=98), interval="prediction")))
+```
+
 
 #####(b) Plot the response and the predictor. Use the abline() function to display the least squares regression line.  
 ```{r}
-plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower")
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Least Squares Regression Line")
 abline(lm.fit, col= 'red')
 ```
 
 
 #####(c) Plot the 95% confidence interval and prediction interval in the same plot as (b) using different colours and legends.  
 ```{r}
-plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "Relation between MPG and Horsepower with 95% confidence interval", pch = 19)
+plot(Auto$horsepower, Auto$mpg, xlab = "Horsepower", ylab = "MPG", main = "95% confidence interval and prediction interval", pch = 19)
 abline(lm.fit, col= 'lightblue')
 new_x <- seq(min(Auto$horsepower), max(Auto$horsepower), by = 0.05)
 conf_inteval <- predict(lm.fit, newdata = data.frame(horsepower=new_x), interval = "confidence", level = 0.95)
@@ -237,6 +243,7 @@ I will choose variable dis to demonstrade.
 ```{r}
 plot(Boston$dis, Boston$crim, main = "Crime rate versus distance to employment center", xlab = "Distance to employment Center", ylab = "Crime rate")
 ```
+
 Relationship between the two looks logarithmmic, in fact log transfor of two resables linear relationship.
 ```{r}
 plot(log(Boston$dis), log(Boston$crim), main = "Log tranform relationship", xlab = "Distance to employment center (Log)", ylab = "Crime rate (Log)")
@@ -254,15 +261,23 @@ second_model[second_model_prob < 0.5] <- 0
 ```
 ```{r}
 table(first_model, Boston$highcrim)
+mean(first_model != Boston$highcrim)
 ```
 ```{r}
 table(second_model, Boston$highcrim)
+mean(second_model != Boston$highcrim)
 ```
 Although false positives decline with new selected features false negative seen an increse, overall model performance did not changed significantly.
 
 ####6. Resampling methods  
 
 Suppose that we use some statistical learning method to make a prediction for the response Y for a particular value of the predictor X. Carefully describe how we might estimate the standard deviation of our prediction.  
+
+We can estimate standard deviation of our prediction using bootstrap method. Insted of obtaining new data sets, we randomly sample our original data set with replacement and we can estimate our standard deviation with those samples. If we sample data B time and find the corresponding estimates and standard deviation of those B samples, we can estimate the standard deviation with following equation.
+$$SD(\hat{\theta}) = \sqrt{\frac{1}{B-1}\sum_{b=1}^{B}(\hat{\theta}_b-\bar{\theta})^2}$$
+where   $$\bar{\theta} = (\frac{1}{B}) \sum_{b=1}^{B} \hat{\theta}_b$$
+
+
 
 ####7. Resampling methods
 We will now perform cross-validation on a simulated data set.  
@@ -277,18 +292,86 @@ y = x - 2*x^2 + 3*x^4 + rnorm(500)
 
 In this data set, what is n and what is p? Write out the model used to generate the data in equation form.
 
-#####(b) Create a scatterplot of X against Y. Comment on what you find.  
+From question above n is 500 and p is equal to 4. The model is $y = x - 2 x^2 + 3 x^4 + \epsilon$ and $\epsilon$ is random noise that produced by rnorm(500).
+
+#####(b) Create a scatterplot of X against Y. Comment on what you find. 
+```{r}
+plot(x, y, main = "Scatter plot of simulated data")
+```
+
+We can clearly observe polinomial relationship between x and y.
 
 #####(c) Set the seed to be 23, and then compute the LOOCV and 10-fold CV errors that result from fitting the following four models using least squares:
+```{r}
+library(boot)
+set.seed(23)
+y = rnorm(500)
+x = 4 - rnorm(500)
+y = x - 2 * x^2 + 3 * x^4 + rnorm(500)
+df <- data.frame(x, y)
+```
+
 i. Y = β0 + β1X + ε
+```{r}
+fit.glm.1 <- glm(y ~ x, data = df)
+cv.loocv <- cv.glm(df, fit.glm.1)
+print(paste("LOOCV error,",cv.loocv$delta[1]))
+cv.10 <- cv.glm(df, fit.glm.1, K=10)
+print(paste("10 fold error,",cv.10$delta[1]))
+```
+
 ii. Y =β0 +β1X+β2X2 +ε
+```{r}
+fit.glm.2 <- glm(y ~ poly(x, 2), data=df)
+cv.loocv2 <- cv.glm(df, fit.glm.2)
+print(paste("LOOCV error,", cv.loocv2$delta[1]))
+cv.10k2 <- cv.glm(df, fit.glm.2 ,K=10)
+print(paste("10 fold error,", cv.10k2$delta[1]))
+```
+
 iii. Y =β0 +β1X+β2X2 +β3X3 +ε
+```{r}
+fit.glm.3 <- glm(y ~ poly(x, 3), data=df)
+cv.loocv3 <- cv.glm(df, fit.glm.3)
+print(paste("LOOCV error,", cv.loocv3$delta[1]))
+cv.10k3 <- cv.glm(df, fit.glm.3 ,K=10)
+print(paste("10 fold error,", cv.10k3$delta[1]))
+```
+
 iv. Y =β0 +β1X+β2X2 +β3X3 +β4X4 +ε.  
+```{r}
+fit.glm.4 <- glm(y ~ poly(x, 4), data=df)
+cv.loocv4 <- cv.glm(df, fit.glm.4)
+print(paste("LOOCV error,", cv.loocv4$delta[1]))
+cv.10k4 <- cv.glm(df, fit.glm.4 ,K=10)
+print(paste("10 fold error,", cv.10k4$delta[1]))
+```
+
 
 Note you may find it helpful to use the data.frame() function to create a single data set containing both X and Y.  
 
 #####(d) Repeat (c) using random seed 46, and report your results. Are your results the same as what you got in (c)? Why?  
+```{r}
+set.seed(46)
+y = rnorm(500)
+x = 4 - rnorm(500)
+y = x - 2 * x^2 + 3 * x^4 + rnorm(500)
+df <- data.frame(x, y)
+for (i in 1:4){
+  print(paste("Fitting model with polinomial degree", i))
+  model.fit <- glm(y ~ poly(x, i), data=df)
+  print(paste("LOOCV error,", cv.glm(df, model.fit)$delta[1]))
+  print(paste("10 fold error,", cv.glm(df, model.fit, K=10)$delta[1]))
+}
+```
+Errors are not the same because random noise generated by `rnorm(500)` if different when seed set to 46.
 
 #####(e) Which of the models in (c) had the smallest LOOCV and 10-fold CV error? Is this what you expected? Explain your answer.  
+Model number 4 has the lowest error rate. It is expected because we generated y as a degree 4 polinomial in the $y = 3 x^4 - 2 x^2 + x + \epsilon$ and degree 4 polinomial predictor fits the data best.
 
 #####(f) Comment on the statistical significance of the coefficient estimates that results from fitting each of the models in (c) using least squares. Do these results agree with the conclusions drawn based on the cross-validation results?
+```{r}
+fit.glm.4 <- glm(y ~ poly(x, 4), data=df)
+summary(fit.glm.4)
+```
+T value reduces significanly while we go from liner to cubic or 4th degree, this strongly agrees with our cross validation results. 
