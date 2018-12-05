@@ -10,7 +10,7 @@ import numpy as np
 seed(404)
 
 
-def myHealthcare(n=1000, output="dictionary"):
+def myHealthcare(n=1000, output="list"):
     """
     Simulates n number of observations in specified range and returns
     data frame.
@@ -22,6 +22,7 @@ def myHealthcare(n=1000, output="dictionary"):
     output: (str) Sets the type of the output format.
     Available formats: Dictionary, json, numpy array, list
     """
+    seed(404)
     temperature = [randint(36, 39) for i in range(n)]
     heart_rate = [randint(55, 100) for i in range(n)]
     pulse = [randint(55, 100) for i in range(n)]
@@ -77,47 +78,40 @@ def abnormalSignAnalytics(data, n=50, variable="pulse"):
     """
     Samples the data and detects abnormal values in given value.
     """
-    sample_data = {}
+    sample_data = data[:n]
 
-    for col, values in data.items():
-        sample_data[col] = values[: n]
-
-    def pulse_abnormal(x): return x < 60 or x > 99
-
-    def blood_abnormal(x): return x > 120
-
-    abnormal_val = []
+    ab_value = []
     count = 0
-    for i in sample_data[variable]:
+    for i in sample_data:
         if variable == "pulse":
-            if pulse_abnormal(i):
+            if (i[3] < 60) or (i[3] > 99):
                 count += 1
-                index = sample_data[variable].index(i)
-                abnormal_val.append([sample_data["ts"][index],
-                                     sample_data[variable][index]])
+                ab_value.append([i[0], i[3]])
         if variable == "bloodpr":
-            if blood_abnormal(i):
+            if i[4] > 120:
                 count += 1
-                index = sample_data[variable].index(i)
-                abnormal_val.append([sample_data["ts"][index],
-                                     sample_data[variable][index]])
+                ab_value.append(i)
         if variable != "pulse" and variable != "bloodpr":
             raise ValueError("Only pulse and bloodpr variables excepted!")
-    return [variable, count, abnormal_val]
+    return [variable, count, ab_value]
 
 
 def frequencyAnalytics(data, n=50):
     """
     Calculates the frequency of values in the sampled data.
     """
-    sample_data = {}
-
-    for col, values in data.items():
-        sample_data[col] = values[:n]
+    sample_data = data
 
     freq = Counter(sample_data['pulse'])
-    ts = [i for i, j in abnormalSignAnalytics(data, n=n)[2]]
-    ab_val = [j for i, j in abnormalSignAnalytics(data, n=n)[2]]
+
+    abnormal_data = []
+    for i in sample_data['pulse']:
+        if (i < 60) or (i > 99):
+            index = sample_data["pulse"].index(i)
+            abnormal_data.append([sample_data["ts"][index],
+                                  sample_data["pulse"][index]])
+    ab_ts = [i[0] for i in abnormal_data]
+    ab_dt = [i[1] for i in abnormal_data]
 
     plt.style.use('seaborn-white')
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
@@ -126,7 +120,7 @@ def frequencyAnalytics(data, n=50):
     ax[1].set_ylabel('Frequency')
     ax[1].set_title('Histogram of Pulse frequency')
     ax[0].plot(sample_data["ts"], sample_data["pulse"])
-    ax[0].plot(ts, ab_val, "o")
+    ax[0].plot(ab_ts, ab_dt, "o")
     ax[0].axhline(y=100, color='r')
     ax[0].axhline(y=59, color='r')
     for tick in ax[0].get_xticklabels():
@@ -154,16 +148,56 @@ def HealthAnalyzer(data, value=56, method="naive"):
         return val_list
     if method == "binary":
         data = sorted(data, key=lambda x: x[3])
-        return data
+        val_list = []
+        l = 0
+        r = len(data) - 1
+        while l < r:
+            mid = mid = int(l + (r - l) / 2)
+            if data[mid][3] == value:
+                val_list.append(data[mid])
+                for i in range(mid - 1, -1, -1):
+                    if data[i][3] == value:
+                        val_list.append(data[i])
+                    else:
+                        break
+                for i in range(mid + 1, r):
+                    if data[i][3] == value:
+                        val_list.append(data[i])
+                    else:
+                        break
+                return val_list
+            elif data[mid][3] < value:
+                l = mid + 1
+            else:
+                r = mid - 1
 
 
-def benchmarking():
-    return NotImplementedError
+def benchmarking(func, params, value):
+    """
+    """
+    run_time = {}
+    iterations = [i for i in range(1000, 7500, 10)]
+    for j in params:
+        run_time[j] = []
+        for i in range(1000, 7500, 10):
+            data = myHealthcare(i)
+            start = time.time()
+            func(data, value, j)
+            finish = time.time()
+            run_time[j].append(finish - start)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(iterations, run_time["naive"], label="naive")
+    ax.plot(iterations, run_time["binary"], label="binary")
+    ax.legend()
+    plt.show()
+    return run_time
 
 
-# print(myHealthcare(output='array')[:10])
+#print(HealthAnalyzer(myHealthcare(), method="binary"))
+binary_list = HealthAnalyzer(myHealthcare(7500), method="binary")
+naive_list = HealthAnalyzer(myHealthcare(7500), method="naive")
 
-#print(HealthAnalyzer(myHealthcare(n=20, output="list"), method="binary"))
-#print(HealthAnalyzer(myHealthcare(n=20, output="list"), method="naive"))
-print(myHealthcare(n=30))
-print(abnormalSignAnalytics(myHealthcare(n=30), n=30))
+print("binary", len(binary_list))
+print("naive", len(naive_list))
+# HealthAnalyzer(myHealthcare(), method="binary")
+print(benchmarking(HealthAnalyzer, ["naive", "binary"], 56))
