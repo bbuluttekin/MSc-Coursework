@@ -96,7 +96,7 @@ def abnormalSignAnalytics(data, n=50, variable="pulse"):
     return [variable, count, ab_value]
 
 
-def frequencyAnalytics(data, n=50):
+def frequencyAnalytics(data, n=50, display=False):
     """
     Calculates the frequency of values in the sampled data.
     """
@@ -129,11 +129,8 @@ def frequencyAnalytics(data, n=50):
     ax[0].set_ylabel('Pulse')
     ax[0].set_title('Plot of abnormal values vs pulse rates over a time')
     plt.show()
-    return freq
-
-
-def plotAnalyticsComplexity():
-    return NotImplementedError
+    if display:
+        return freq
 
 
 def HealthAnalyzer(data, value=56, method="naive"):
@@ -172,32 +169,38 @@ def HealthAnalyzer(data, value=56, method="naive"):
                 r = mid - 1
 
 
-def benchmarking(func, params, value):
+def benchmarking(func, params, value, display=False):
     """
+    Benchmark the function passed as a prameter.
     """
     run_time = {}
-    iterations = [i for i in range(1000, 7500, 10)]
+    iterations = [i for i in range(1000, 7500, 100)]
     for j in params:
         run_time[j] = []
-        for i in range(1000, 7500, 10):
+        for i in range(1000, 7500, 100):
             data = myHealthcare(i)
             start = time.time()
             func(data, value, j)
             finish = time.time()
             run_time[j].append(finish - start)
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(16, 8))
     ax.plot(iterations, run_time["naive"], label="naive")
     ax.plot(iterations, run_time["binary"], label="binary")
+    ax.set_xlabel("Number of Observations")
+    ax.set_ylabel("Complexity")
+    ax.set_title("Comparison of complexity for two algorithm")
     ax.legend()
     plt.show()
-    return run_time
+    if display:
+        return run_time
 
 
-#print(HealthAnalyzer(myHealthcare(), method="binary"))
 binary_list = HealthAnalyzer(myHealthcare(7500), method="binary")
 naive_list = HealthAnalyzer(myHealthcare(7500), method="naive")
 
-print("binary", len(binary_list))
-print("naive", len(naive_list))
-# HealthAnalyzer(myHealthcare(), method="binary")
+
+def test_search():
+    assert len(binary_list) == len(naive_list)
+
+
 print(benchmarking(HealthAnalyzer, ["naive", "binary"], 56))
