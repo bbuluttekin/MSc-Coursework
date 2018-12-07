@@ -2,7 +2,7 @@ import json
 from collections import Counter
 import time
 import datetime
-from random import randint, seed
+from random import randint, seed, sample
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -78,7 +78,8 @@ def abnormalSignAnalytics(data, n=50, variable="pulse"):
     """
     Samples the data and detects abnormal values in given value.
     """
-    sample_data = data[:n]
+    seed(404)
+    sample_data = sample(data, n)
 
     ab_value = []
     count = 0
@@ -90,7 +91,7 @@ def abnormalSignAnalytics(data, n=50, variable="pulse"):
         if variable == "bloodpr":
             if i[4] > 120:
                 count += 1
-                ab_value.append(i)
+                ab_value.append(i[0], i[4])
         if variable != "pulse" and variable != "bloodpr":
             raise ValueError("Only pulse and bloodpr variables excepted!")
     return [variable, count, ab_value]
@@ -121,8 +122,6 @@ def frequencyAnalytics(data, n=50, display=False):
     ax[1].set_title('Histogram of Pulse frequency')
     ax[0].plot(sample_data["ts"], sample_data["pulse"])
     ax[0].plot(ab_ts, ab_dt, "o")
-    ax[0].axhline(y=100, color='r')
-    ax[0].axhline(y=59, color='r')
     for tick in ax[0].get_xticklabels():
         tick.set_rotation(45)
     ax[0].set_xlabel('Time \n 2A')
@@ -171,13 +170,13 @@ def HealthAnalyzer(data, value=56, method="naive"):
 
 def benchmarking(func, params, value, display=False):
     """
-    Benchmark the function passed as a prameter.
+    Benchmarks the function passed on based on parameters.
     """
     run_time = {}
-    iterations = [i for i in range(1000, 7500, 100)]
+    iterations = list(range(1000, 7500, 100))
     for j in params:
         run_time[j] = []
-        for i in range(1000, 7500, 100):
+        for i in iterations:
             data = myHealthcare(i)
             start = time.time()
             func(data, value, j)
@@ -195,12 +194,11 @@ def benchmarking(func, params, value, display=False):
         return run_time
 
 
-binary_list = HealthAnalyzer(myHealthcare(7500), method="binary")
-naive_list = HealthAnalyzer(myHealthcare(7500), method="naive")
+if __name__ == "__main__":
+    binary_list = HealthAnalyzer(myHealthcare(7500), method="binary")
+    naive_list = HealthAnalyzer(myHealthcare(7500), method="naive")
 
-
-def test_search():
-    assert len(binary_list) == len(naive_list)
-
-
-print(benchmarking(HealthAnalyzer, ["naive", "binary"], 56))
+    def test_search():
+        assert len(binary_list) == len(naive_list)
+    data = myHealthcare()
+    print(benchmarking(HealthAnalyzer, ["naive", "binary"], 56))
