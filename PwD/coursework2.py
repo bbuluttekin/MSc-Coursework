@@ -4,7 +4,6 @@ import time
 import datetime
 from random import randint, seed, sample
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 
 seed(404)
@@ -195,10 +194,22 @@ def benchmarking(func, params, value, display=False):
 
 
 if __name__ == "__main__":
+    data = myHealthcare()
+    abnormalSignAnalytics(data)
+    df = myHealthcare(100, output="dictionary")
+    frequencyAnalytics(df, 100)
+    data = myHealthcare()
+    ts = [i[0] for i in HealthAnalyzer(data)]
+    hr = [i[2] for i in HealthAnalyzer(data)]
+    plt.figure(figsize=(15, 5))
+    plt.title("Heart rate where pulse = 56", fontsize=20)
+    plt.xlabel("Time", fontsize=15)
+    plt.ylabel("Heart rate", fontsize=15)
+    plt.plot(ts, hr)
+    plt.show()
+    benchmarking(HealthAnalyzer, ["naive", "binary"], 56)
     binary_list = HealthAnalyzer(myHealthcare(7500), method="binary")
     naive_list = HealthAnalyzer(myHealthcare(7500), method="naive")
 
     def test_search():
         assert len(binary_list) == len(naive_list)
-    data = myHealthcare()
-    print(benchmarking(HealthAnalyzer, ["naive", "binary"], 56))
