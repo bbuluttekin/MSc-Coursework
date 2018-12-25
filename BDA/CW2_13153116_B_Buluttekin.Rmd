@@ -1,0 +1,298 @@
+---
+title: "Coursework 2"
+author: "Baran Buluttekin"
+date: "21/12/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Big Data Analytics using R
+
+- **Programme:** MSc Data Science
+- **Student ID:** 13153116
+
+## 1. Decision Trees
+
+> (a) Sketch the tree corresponding to the partition of the predictor space illustrated in the left-hand panel of the figure above. The numbers inside the boxes indicate the mean of Y within each region.
+
+> (b) Create a diagram similar to the left-hand panel of the figure, using the tree illustrated in the right-hand panel of the same figure. You should divide up the predictor space into the correct regions, and indicate the mean for each region.
+
+```{r}
+plot(NA, NA, type = "n", xlim = c(-1,4), ylim = c(-1,4), xlab = "X1", ylab = "X2")
+# X2 < 1
+lines(x = c(-1,4), y = c(1,1))
+text(x = 4.1, y = 1, labels = c("1"), col = "red")
+# X1 <1
+lines(x = c(1,1), y = c(-1,1))
+text(x = 1, y = 1.5, labels = c("1"), col = "red")
+# X2 < 2
+lines(x = c(-1,4), y = c(2,2))
+text(x = 4.1, y = 2, labels = c("2"), col = "red")
+# X1 < 0
+lines(x = c(0,0), y = c(1,2))
+text(x = 0, y = 2.5, labels = c("0"), col = "red")
+# Labelling regions
+text(x = 0, y = 0, labels = c("-1.80"))
+text(x = 2.5, y = 0, labels = c("0.63"))
+text(x = -0.5, y = 1.5, labels = c("-1.06"))
+text(x = 2, y = 1.5, labels = c("0.21"))
+text(x = 1.5, y = 3, labels = c("2.49"))
+```
+
+
+## 2. Regression Trees
+
+In the lab, a classification tree was applied to the Carseats data set after converting Sales into a qualitative response variable. Now we will seek to predict Sales using regression trees and related approaches, treating the response as a quantitative variable.
+
+> (a) Split the data set into a training set and a test set.
+
+```{r}
+library(ISLR)
+library(tree)
+set.seed(1)
+train <- sample(1:nrow(Carseats), nrow(Carseats) / 2)
+df.train <- Carseats[train, ]
+df.test <- Carseats[-train, ]
+```
+
+> (b) Fit a regression tree to the training set. Plot the tree, and interpret the results. What test error rate do you obtain?
+
+```{r}
+tree.carseats <- tree(Sales ~ ., data = df.train)
+summary(tree.carseats)
+```
+```{r}
+plot(tree.carseats)
+text(tree.carseats, pretty = 0)
+```
+```{r}
+tree.pred <- predict(tree.carseats, newdata = df.test)
+mean((tree.pred - df.test$Sales)^2)
+```
+```{r}
+print(paste("MSE for the train set is around", 
+            round(mean((tree.pred - df.test$Sales)^2), digits = 2)))
+```
+
+> (c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test error rate?
+
+```{r}
+cv.carseats <- cv.tree(tree.carseats)
+plot(cv.carseats)
+```
+```{r}
+min <- which.min(cv.carseats$dev)
+cv.carseats$dev[min]
+```
+
+We can choose min size from cross validation to prune the tree.
+
+```{r}
+prune.carseats <- prune.tree(tree.carseats, best = cv.carseats$size[min])
+plot(prune.carseats)
+text(prune.carseats, pretty = 0)
+```
+```{r}
+cv.pred <- predict(prune.carseats, newdata = df.test)
+mean((cv.pred - df.test$Sales)^2)
+```
+In this case pruning the tree increased the MSE to 5.33.
+
+> (d) Use the bagging approach in order to analyze this data. What test error rate do you obtain? Use the importance() function to determine which variables are most important.
+
+```{r}
+require(randomForest)
+bag.carseats <- randomForest(Sales ~ ., data = df.train, 
+                             mtry = 10, ntree = 500, importance = TRUE)
+bag.pred <- predict(bag.carseats, newdata = df.test)
+mean((bag.pred - df.test$Sales)^2)
+```
+MSE is decreased to as low as 2.61 after we applied random forest algorithm.
+
+```{r}
+importance(bag.carseats)
+```
+From the table above we can clearly observe that `Price` and `ShelveLoc` are by far most important variables.
+
+> (e) Use random forests to analyze this data. What test error rate do you obtain? Use the importance() function to determine which variables are most important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained.
+
+```{r}
+rf.carseats <- randomForest(Sales ~ ., data = df.train,
+                            mtry = 3, ntree = 500, importance = TRUE)
+rf.pred <- predict(rf.carseats, newdata = df.test)
+mean((rf.pred - df.test$Sales)^2)
+```
+By selecting m = $\sqrt{p}$, we obtained 3.27 MSE.
+```{r}
+importance(rf.carseats)
+```
+Similar to subsection (d) `Price` and `ShelveLoc` are the most important variables.
+
+## 3. Classification Trees
+
+This problem involves the OJ data set which is part of the ISLR package.
+
+> (a) Create a training set containing a random sample of 800 observations, and a test set containing the remaining observations.
+
+```{r}
+set.seed(123)
+train <- sample(1:nrow(OJ), 800)
+train.oj <- OJ[train, ]
+test.oj <- OJ[-train, ]
+```
+
+> (b) Fit a tree to the training data, with `Purchase` as the response and the other variables as predictors. Use the `summary()` function to produce summary statistics about the tree, and describe the results obtained. What is the training error rate? How many terminal nodes does the tree have?
+
+```{r}
+tree.oj <- tree(Purchase ~ ., data = train.oj)
+summary(tree.oj)
+```
+Misclassification train error rate is 0.165
+Number of terminal nodes:8
+
+> (c) Type in the name of the tree object in order to get a detailed text output. Pick one of the terminal nodes, and interpret the information displayed.
+
+```{r}
+tree.oj
+```
+Terminal nodes are denoted with asterisk (*). I pick the number 9 node, which splitted in LoyalCH > 0.036, there are 116 observations in this branch with deviance of 106.600. Around 17% of the observations in that branch belong to CH and the remaining observations (83%) takes MM value.
+
+> (d) Create a plot of the tree, and interpret the results.
+
+```{r}
+plot(tree.oj)
+text(tree.oj, pretty = 0)
+```
+It is clear that the brand loyalty to citrus hill `LoyalCH` is most important predictor. This can be seen from the fact its the deciding factor in root branch as wel as left and right branches after the root branch. 
+
+> (e) Predict the response on the test data, and produce a confusion matrix comparing the test labels to the predicted test labels. What is the test error rate?
+
+```{r}
+tree.pred.oj <- predict(tree.oj, test.oj, type = "class")
+table(tree.pred.oj, test.oj$Purchase)
+```
+```{r}
+1 - (158 + 64) /nrow(test.oj)
+```
+From the calculation above misclassification error rate is around 18%.
+
+> (f) Apply the `cv.tree()` function to the training set in order to determine the optimal tree size.
+
+```{r}
+cv.oj <- cv.tree(tree.oj, FUN = prune.misclass)
+cv.oj
+```
+
+> (g) Produce a plot with tree size on the x-axis and cross-validated classification error rate on the y-axis.
+
+```{r}
+plot(cv.oj)
+```
+
+> (h) Which tree size corresponds to the lowest cross-validated classification error rate?
+
+From size 2 onwards misclassification rate is flat and we can observe that first instance of the lowest rate starts at 2.
+
+> (i) Produce a pruned tree corresponding to the optimal tree size obtained using cross-validation. If cross-validation does not lead to selection of a pruned tree, then create a pruned tree with five terminal nodes.
+
+```{r}
+prune.oj <- prune.misclass(tree.oj, best = 2)
+plot(prune.oj)
+text(prune.oj, pretty = 0)
+```
+
+> (j) Compare the training error rates between the pruned and unpruned trees. Which is higher?
+
+```{r}
+summary(tree.oj)
+```
+```{r}
+summary(prune.oj)
+```
+Pruning resulted in less accurate prediction in this case by incresing error rate slightly from 16% in full tree to 19% in pruned tree.
+
+> (k) Compare the test error rates between the pruned and unpruned trees. Which is higher?
+
+```{r}
+prune.pred <- predict(prune.oj, test.oj, type = "class")
+table(prune.pred, test.oj$Purchase)
+```
+```{r}
+1 - (143 + 76) / nrow(test.oj)
+```
+Error rate in pruned tree is slightly higher (approximately 19%) then the unpruned tree (approximately 18%).
+
+## 4. SVM
+
+In this problem, you will use support vector approaches in order to predict whether a given car gets high or low gas mileage based on the `Auto` data set.
+
+> (a) Create a binary variable that takes on a 1 for cars with gas mileage above the median, and a 0 for cars with gas mileage below the median.
+
+> (b) Fit a support vector classifier to the data with various values of cost, in order to predict whether a car gets high or low gas mileage. Report the cross-validation errors associated with different values of this parameter. Comment on your results.
+
+> (c) Now repeat (b), this time using SVMs with radial and polynomial basis kernels, with different values of gamma and degree and cost. Comment on your results.
+
+> (d) Make some plots to back up your assertions in (b) and (c).
+
+**Hint:** In the lab, we used the `plot()` function for svm objects only in cases with p = 2. When p > 2, you can use the `plot()` function to create plots displaying pairs of variables at a time. Essentially, instead of typing `plot(svmfit , dat)` where svmfit contains your fitted model and dat is a data frame containing your data, you can type `plot(svmfit , dat , x1~x4)` in order to plot just the first and fourth variables. However, you must replace x1 and x4 with the correct
+variable names. To find out more, type `?plot.svm`.
+
+## 5. SVM
+
+Here we explore the maximal margin classifier on a toy data set. (a) We are given n = 7 observations in p = 2 dimensions. For each observation, there is an associated class label.
+
+Sketch the observations.
+
+> (b) Sketch the optimal separating hyperplane, and provide the equation for this hyperplane of the following form.
+
+$$\beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} = 0$$
+
+> (c) Describe the classification rule for the maximal margin classifier. It should be something along the lines of “Classify to Red if $\beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} > 0$, and classify to Blue otherwise.” Provide the values for $\beta_{0}$, $\beta_{1}$, and $\beta_{2}$.
+
+> (d) On your sketch, indicate the margin for the maximal margin hyperplane.
+
+> (e) Indicate the support vectors for the maximal margin classifier.
+
+> (f) Argue that a slight movement of the seventh observation would not affect the maximal margin hyperplane.
+
+> (g) Sketch a hyperplane that is not the optimal separating hyperplane, and provide the equation for this hyperplane.
+
+> (h) Draw an additional observation on the plot so that the two classes are no longer separable by a hyperplane.
+
+## 6. Hierarchical clustering
+
+Consider the `USArrests` data. We will now perform hierarchical clustering on the states.
+
+> (a) Using hierarchical clustering with complete linkage and Euclidean distance, cluster the states.
+
+> (b) Cut the dendrogram at a height that results in three distinct clusters. Which states belong to which clusters?
+
+> (c) Hierarchically cluster the states using complete linkage and Euclidean distance, after scaling the variables to have standard deviation one.
+
+> (d) What effect does scaling the variables have on the hierarchical clustering obtained? In your opinion, should the variables be scaled before the inter-observation dissimilarities are computed? Provide a justification for your answer.
+
+## 7. PCA and K-Means Clustering
+
+In this problem, you will generate simulated data, and then perform PCA and K-means clustering on the
+data.
+
+> (a) Generate a simulated data set with 20 observations in each of three classes (i.e. 60 observations total), and 50 variables.
+
+**Hint:** There are a number of functions in R that you can use to generate data. One example is the rnorm() function; runif() is another option. Be sure to add a mean shift to the observations in each class so that there are three distinct classes.
+
+> (b) Perform PCA on the 60 observations and plot the first two principal components’ eigenvector. Use a different color to indicate the observations in each of the three classes. If the three classes appear separated in this plot, then continue on to part (c). If not, then return to part (a) and modify the simulation so that there is greater separation between the three classes. Do not continue to part (c) until the three classes show at least some separation in the first two principal component eigenvectors.
+
+> (c) Perform K-means clustering of the observations with K = 3. How well do the clusters that you obtained in K-means clustering compare to the true class labels?
+
+**Hint:** You can use the table() function in R to compare the true class labels to the class labels obtained by clustering. Be careful how you interpret the results: K-means clustering will arbitrarily number the clusters, so you cannot simply check whether the true class labels and clustering labels are the same.
+
+> (d) Perform K-means clustering with K = 2. Describe your results.
+
+> (e) Now perform K-means clustering with K = 4, and describe your results.
+
+> (f) Now perform K-means clustering with K = 3 on the first two principal components, rather than on the raw data. That is, perform K-means clustering on the 60 × 2 matrix of which the first column is the first principal component’s corresponding eigenvector, and the second column is the second principal component’s corresponding eigenvector. Comment on the results.
+
+> (g) Using the scale() function, perform K-means clustering with K = 3 on the data after scaling each variable to have standard deviation one. How do these results compare to those obtained in (b)? Explain.
