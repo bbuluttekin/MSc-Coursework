@@ -231,14 +231,69 @@ In this problem, you will use support vector approaches in order to predict whet
 
 > (a) Create a binary variable that takes on a 1 for cars with gas mileage above the median, and a 0 for cars with gas mileage below the median.
 
+```{r}
+Bvar <- ifelse(Auto$mpg > median(Auto$mpg), 1, 0)
+Auto$mpglevel <- as.factor(Bvar)
+```
+
 > (b) Fit a support vector classifier to the data with various values of cost, in order to predict whether a car gets high or low gas mileage. Report the cross-validation errors associated with different values of this parameter. Comment on your results.
 
+```{r}
+library(e1071)
+set.seed(123)
+grid <- c(seq(0.001,0.01, length.out = 5),
+          seq(0.01, 1, length.out = 5),
+          seq(1, 10, length.out = 5),
+          seq(10, 100, length.out = 5))
+tune.svm <- tune(svm, mpglevel ~ ., data = Auto, kernel = "linear", ranges = list(cost = grid))
+summary(tune.svm)
+```
+Tuning returns us best parameter cost = 0.505 
+
 > (c) Now repeat (b), this time using SVMs with radial and polynomial basis kernels, with different values of gamma and degree and cost. Comment on your results.
+
+```{r}
+set.seed(123)
+tune.svm <- tune(svm, mpglevel ~ ., data = Auto, kernel = "radial", ranges = list(cost = grid), gamma = grid)
+summary(tune.svm)
+```
+Returned best parameters: cost=100
+```{r}
+set.seed(123)
+tune.svm <- tune(svm, mpglevel ~ ., data = Auto, kernel = "polynomial", ranges = list(cost = grid), degree = c(1, 2, 3, 4, 5))
+summary(tune.svm)
+```
+Returned best parameters: cost=77.5 and performance of polinomial kernel was better than the rbf kernel.
 
 > (d) Make some plots to back up your assertions in (b) and (c).
 
 **Hint:** In the lab, we used the `plot()` function for svm objects only in cases with p = 2. When p > 2, you can use the `plot()` function to create plots displaying pairs of variables at a time. Essentially, instead of typing `plot(svmfit , dat)` where svmfit contains your fitted model and dat is a data frame containing your data, you can type `plot(svmfit , dat , x1~x4)` in order to plot just the first and fourth variables. However, you must replace x1 and x4 with the correct
 variable names. To find out more, type `?plot.svm`.
+
+```{r}
+svm.linear <- svm(mpglevel ~ ., data = Auto, kernel = "linear", cost = 0.505)
+svm.polynomial <- svm(mpglevel ~ ., data = Auto, kernel = "polynomial", cost = 77.5)
+svm.radial <- svm(mpglevel ~ ., data = Auto, kernel = "radial", cost = 100)
+# Plots for linear kernel
+plot(svm.linear, data = Auto, mpg ~ weight)
+plot(svm.linear, Auto, mpg ~ displacement)
+plot(svm.linear, Auto, mpg ~ horsepower)
+plot(svm.linear, Auto, mpg ~ acceleration)
+```
+```{r}
+# Plots for polynomial kernel
+plot(svm.polynomial, data = Auto, mpg ~ weight)
+plot(svm.polynomial, Auto, mpg ~ displacement)
+plot(svm.polynomial, Auto, mpg ~ horsepower)
+plot(svm.polynomial, Auto, mpg ~ acceleration)
+```
+```{r}
+# Plots for radial kernel
+plot(svm.radial, data = Auto, mpg ~ weight)
+plot(svm.radial, Auto, mpg ~ displacement)
+plot(svm.radial, Auto, mpg ~ horsepower)
+plot(svm.radial, Auto, mpg ~ acceleration)
+```
 
 ## 5. SVM
 
