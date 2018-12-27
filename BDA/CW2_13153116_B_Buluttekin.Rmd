@@ -380,12 +380,27 @@ plot(hc.us)
 > (b) Cut the dendrogram at a height that results in three distinct clusters. Which states belong to which clusters?
 
 ```{r}
-cutree(hc.us, 3)
+hc.us.cut <- cutree(hc.us, 3)
+split(data.frame(names(hc.us.cut), hc.us.cut), as.factor(hc.us.cut))
 ```
 
 > (c) Hierarchically cluster the states using complete linkage and Euclidean distance, after scaling the variables to have standard deviation one.
 
+```{r}
+hc.us.scale = hclust(dist(scale(USArrests)), method='complete')
+plot(hc.us.scale)
+```
+
 > (d) What effect does scaling the variables have on the hierarchical clustering obtained? In your opinion, should the variables be scaled before the inter-observation dissimilarities are computed? Provide a justification for your answer.
+
+```{r}
+hc.cut.sc <- cutree(hc.us.scale, 3)
+split(data.frame(names(hc.cut.sc), hc.cut.sc), as.factor(hc.cut.sc))
+```
+```{r}
+table(cutree(hc.us, 3), cutree(hc.us.scale, 3))
+```
+Scaling the variables in this case is appropriate because of the range and the unit differences in the data.
 
 ## 7. PCA and K-Means Clustering
 
