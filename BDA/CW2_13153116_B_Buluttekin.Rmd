@@ -18,6 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 > (a) Sketch the tree corresponding to the partition of the predictor space illustrated in the left-hand panel of the figure above. The numbers inside the boxes indicate the mean of Y within each region.
 
+![](/Users/Baran/Desktop/Screenshot 2018-12-30 at 21.35.46)
+
 > (b) Create a diagram similar to the left-hand panel of the figure, using the tree illustrated in the right-hand panel of the same figure. You should divide up the predictor space into the correct regions, and indicate the mean for each region.
 
 ```{r}
@@ -125,7 +127,7 @@ rf.carseats <- randomForest(Sales ~ ., data = df.train,
 rf.pred <- predict(rf.carseats, newdata = df.test)
 mean((rf.pred - df.test$Sales)^2)
 ```
-By selecting m = $\sqrt{p}$, we obtained 3.27 MSE.
+By selecting m = $\sqrt{p}$, we obtained 3.26 MSE.
 ```{r}
 importance(rf.carseats)
 ```
@@ -150,8 +152,8 @@ test.oj <- OJ[-train, ]
 tree.oj <- tree(Purchase ~ ., data = train.oj)
 summary(tree.oj)
 ```
-Misclassification train error rate is 0.165
-Number of terminal nodes:8
+Misclassification train error rate is 0.161
+Number of terminal nodes:10
 
 > (c) Type in the name of the tree object in order to get a detailed text output. Pick one of the terminal nodes, and interpret the information displayed.
 
@@ -413,8 +415,8 @@ data.
 set.seed(123)
 df <- matrix(rnorm(20 * 3 * 50, mean = 0, sd = 0.001), ncol = 50)
 df[1:20, 2] <- 1
-df[21:40, 1] <- 2
-df[21:40, 2] <- 2
+df[21:40, 1] <- 4
+df[21:40, 2] <- 4
 df[41:60, 1] <- 1
 y <- c(rep(1, 20), rep(2, 20), rep(3, 20))
 ```
@@ -425,7 +427,7 @@ y <- c(rep(1, 20), rep(2, 20), rep(3, 20))
 
 ```{r}
 pr.out <- prcomp(df)
-plot(pr.out$x[, 1:2], col = 1:3, xlab = "Z1", ylab = "Z2", pch = 19)
+plot(pr.out$x[, 1:2], col = 1:3, xlab = "First", ylab = "Second", pch = 10)
 ```
 
 
@@ -436,6 +438,7 @@ set.seed(123)
 kmean.out <- kmeans(df, 3, nstart = 20)
 table(y, kmean.out$cluster)
 ```
+
 
 **Hint:** You can use the table() function in R to compare the true class labels to the class labels obtained by clustering. Be careful how you interpret the results: K-means clustering will arbitrarily number the clusters, so you cannot simply check whether the true class labels and clustering labels are the same.
 
