@@ -54,8 +54,8 @@ In the lab, a classification tree was applied to the Carseats data set after con
 ```{r}
 library(ISLR)
 library(tree)
-set.seed(1)
-train <- sample(1:nrow(Carseats), nrow(Carseats) / 2)
+set.seed(123)
+train <- sample(1:nrow(Carseats), nrow(Carseats) * 3 / 4)
 df.train <- Carseats[train, ]
 df.test <- Carseats[-train, ]
 ```
@@ -101,7 +101,7 @@ text(prune.carseats, pretty = 0)
 cv.pred <- predict(prune.carseats, newdata = df.test)
 mean((cv.pred - df.test$Sales)^2)
 ```
-In this case pruning the tree increased the MSE to 5.33.
+In this case pruning the tree increased the MSE to 4.27.
 
 > (d) Use the bagging approach in order to analyze this data. What test error rate do you obtain? Use the importance() function to determine which variables are most important.
 
@@ -112,7 +112,7 @@ bag.carseats <- randomForest(Sales ~ ., data = df.train,
 bag.pred <- predict(bag.carseats, newdata = df.test)
 mean((bag.pred - df.test$Sales)^2)
 ```
-MSE is decreased to as low as 2.61 after we applied random forest algorithm.
+MSE is decreased to as low as 2.24 after we applied random forest algorithm.
 
 ```{r}
 importance(bag.carseats)
@@ -127,7 +127,7 @@ rf.carseats <- randomForest(Sales ~ ., data = df.train,
 rf.pred <- predict(rf.carseats, newdata = df.test)
 mean((rf.pred - df.test$Sales)^2)
 ```
-By selecting m = $\sqrt{p}$, we obtained 3.26 MSE.
+By selecting m = $\sqrt{p}$, we obtained 2.69 MSE.
 ```{r}
 importance(rf.carseats)
 ```
@@ -196,7 +196,7 @@ plot(cv.oj)
 
 > (h) Which tree size corresponds to the lowest cross-validated classification error rate?
 
-From size 2 onwards misclassification rate is flat and we can observe that first instance of the lowest rate starts at 2.
+From size 2 onwards misclassification rate is flat (with exception of 5 to 8) and we can observe that first instance of the lowest rate starts at 2.
 
 > (i) Produce a pruned tree corresponding to the optimal tree size obtained using cross-validation. If cross-validation does not lead to selection of a pruned tree, then create a pruned tree with five terminal nodes.
 
