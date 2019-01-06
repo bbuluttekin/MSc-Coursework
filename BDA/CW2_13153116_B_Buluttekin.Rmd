@@ -1,7 +1,6 @@
 ---
 title: "Coursework 2"
 author: "Baran Buluttekin"
-date: "21/12/2018"
 output: pdf_document
 ---
 
@@ -18,7 +17,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 > (a) Sketch the tree corresponding to the partition of the predictor space illustrated in the left-hand panel of the figure above. The numbers inside the boxes indicate the mean of Y within each region.
 
+**Please check the pdf file for the first diagram!**
+
 ![](/Users/Baran/Desktop/Screenshot 2018-12-30 at 21.35.46)
+
 
 > (b) Create a diagram similar to the left-hand panel of the figure, using the tree illustrated in the right-hand panel of the same figure. You should divide up the predictor space into the correct regions, and indicate the mean for each region.
 
@@ -448,7 +450,7 @@ table(y, kmean.out$cluster)
 km2.out <- kmeans(df, 2, nstart = 20)
 table(y, km2.out$cluster)
 ```
-All three classes now classified in two class.
+All three classes now classified in two class. Where class 1 and 2 share the same class.
 
 > (e) Now perform K-means clustering with K = 4, and describe your results.
 
