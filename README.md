@@ -3,3 +3,5 @@
 Courses taken in the programme:
 
 Pwd: Programming with Data
+PoP1
+BDA
