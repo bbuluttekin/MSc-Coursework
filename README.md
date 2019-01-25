@@ -6,3 +6,4 @@ Courses taken in the programme:
 - PoP1: Principles of Programming I
 - BDA: Big Data Analytics Using R
 - FoC: Fundamentals of Computing
+- ML: Machine Learning
