@@ -7,3 +7,4 @@ Courses taken in the programme:
 - BDA: Big Data Analytics Using R
 - FoC: Fundamentals of Computing
 - ML: Machine Learning
+- CC: Cloud Computing
