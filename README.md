@@ -8,3 +8,4 @@ Courses taken in the programme:
 - FoC: Fundamentals of Computing
 - ML: Machine Learning
 - CC: Cloud Computing
+- CS: Computer Systems
