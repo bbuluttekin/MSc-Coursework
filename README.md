@@ -9,3 +9,4 @@ Courses taken in the programme:
 - ML: Machine Learning
 - CC: Cloud Computing
 - CS: Computer Systems
+- DSTA: Data Science Techniques and Applications
