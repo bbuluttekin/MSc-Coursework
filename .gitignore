@@ -3,7 +3,7 @@
 .vscode/
 __pycache__
 .ipynb_checkpoints
-
+mongon.json
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
