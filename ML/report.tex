@@ -1,6 +1,8 @@
-\documentclass{article}
+\documentclass[12pt]{report}
 
 \usepackage[margin=1in,left=1.5in,includefoot]{geometry}
+
+\usepackage{pythonhighlight}
 % Header and Footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -19,19 +21,19 @@
         [1.5cm]
 
 
-            \begin{minipage}[t]{0.4\textwidth}
-            \begin{flushleft} \large
-            \emph{Author:}\\
-            {Baran} % Author name - remove the \href bracket to remove the link
-            \end{flushleft}
-            \end{minipage}
-            \begin{minipage}[t]{0.4\textwidth}
-            \begin{flushright} \large
-            \emph{Supervisor:} \\
-            {George} % Supervisor name - remove the \href bracket to remove the link  
-            \end{flushright}
-            \end{minipage}\\
-            [3cm]
+        \begin{minipage}[t]{0.4\textwidth}
+        \begin{flushleft} \large
+        \emph{Author:}\\
+        {Baran} % Author name - remove the \href bracket to remove the link
+        \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.4\textwidth}
+        \begin{flushright} \large
+        \emph{Supervisor:} \\
+        {George} % Supervisor name - remove the \href bracket to remove the link  
+        \end{flushright}
+        \end{minipage}\\
+        [3cm]
 
             \vfill
 
@@ -48,6 +50,46 @@
     \end{center}
 \end{titlepage}    
 
+\pagenumbering{roman}
+\section*{Abstract}
+\addcontentsline{toc}{section}{\numberline{}Abstract}
+This is placeholder text. To add more information type it after this line.\\
+\cleardoublepage
+
+
+\section*{Declaration}
+\addcontentsline{toc}{section}{\numberline{}Declaration}
+I hearby declare this file a text.
+
+\begin{python}
+    import pymongo as pm
+    import json
+
+    with open("DSTA/Lab/mongo.json") as f:
+    url = json.load(f)
+
+
+    c = pm.MongoClient(url["url"])
+
+    print(c.admin)
+\end{python}
+and text goes on.\\
+\cleardoublepage
+
+\tableofcontents
+\thispagestyle{empty}
+\cleardoublepage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+
 \section{Introduction}
+Lorem ipsum
+test display 
+
+
+
 
 \end{document}

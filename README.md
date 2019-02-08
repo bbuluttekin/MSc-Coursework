@@ -1,6 +1,6 @@
 # Main repository for coursework of my MSc Data Science degree
 
-Courses taken in the programme:
+Courses taken in the program:
 
 - Pwd: Programming with Data
 - PoP1: Principles of Programming I
