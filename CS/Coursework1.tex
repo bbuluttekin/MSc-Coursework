@@ -28,10 +28,34 @@
             LOAD R2, b\\
             ADD R1, a, b
             \item other point
-            \item last item
+            \item The table \ref{table:1} is an example of referenced \LaTeX elements.
+ 
+            \begin{table}[h!]
+            \centering
+            \begin{tabular}{||c||c c c c c c c||} 
+             \hline
+              & IF & ID & IW & RR & EX & WB & Comments\\ [0.5ex] 
+             \hline\hline
+             1 & 2 & 3 & 4 & 5 & 6 & 7 & This is a long explanation\\ 
+             2 & 7 & 78 & 5415 & 5 & 6 & 7 &  \\
+             3 & 545 & 778 & 7507 & 5 & 6 & 7 & \\
+             4 & 545 & 18744 & 7560 & & & & \\
+             5 & 88 & 788 & 6344 & & & & \\  
+             6 & 88 & 788 & 6344 & & & & \\
+             [1ex]
+             \hline
+            \end{tabular}
+            \caption{Table to test captions and labels}
+            \label{table:1}
+            \end{table}
         \end{enumerate}
-        \item Second part of the question \\
-        is ...
+        \item 15 ns = 15$\times 10^{-9}$ seconds\\
+        85 ns = 85$\times 10^{-9}$ seconds\\
+        10 ms = 1 $\times 10^{-2}$ seconds\\
+        \\
+        Probability of being in main memory is 0.7 and cache hit ratio is 0.4. Therefore time to load is:\\
+        0.7 $\times$ 1 $\times 10^{-2}$ + 0.3 $\times$ (0.4 $\times$ 15$\times 10^{-9}$ + 0.6 $\times$ 85$\times 10^{-9}$)
+
     \end{enumerate}
 
 \end{document} 
