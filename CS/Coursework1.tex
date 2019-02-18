@@ -24,9 +24,21 @@
     \begin{enumerate}
         \item First
         \begin{enumerate}
-            \item LOAD R1, a\\
-            LOAD R2, b\\
-            ADD R1, a, b
+            \item 1 LOAD r3, M\\
+            2 LOAD r0, \#1\\
+            3 LOAD r1, \#1\\
+            4 LOAD r2, \#1\\
+            5 SUB r3, r3, \#1\\
+            6 ADD r4, r1, r0\\
+            7 MUL r4, r4, r2\\
+            8 LOAD r0, r1\\
+            9 LOAD r1, r2\\
+            10 LOAD r2, r4\\
+            11 BNE 5, r3, \#3 // jump to instruction 5 if r3 not equal to 3\\
+            12 STOR M, r2\\
+            \\
+            where \# indicates immediate addressing and BNE stands for "branch if not equal"
+            \\
             \item other point
             \item The table \ref{table:1} is an example of referenced \LaTeX elements.
  
