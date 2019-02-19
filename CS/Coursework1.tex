@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{enumerate}
+\usepackage{longtable}
 
 \begin{document}
     \begin{titlepage}
@@ -8,7 +9,7 @@
             \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
             \rule[0.5ex]{\linewidth}{1pt}\\[\baselineskip]
             %title of the report
-            \huge{\bfseries Computer Systems\\Coursework1}\\[4mm]
+            \huge{\bfseries Computer Systems\\Coursework 1}\\[4mm]
             \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
             \rule[0.5ex]{\linewidth}{2pt}\\
             [2.5cm]
@@ -22,7 +23,7 @@
     \end{titlepage}
     \section*{Answers}
     \begin{enumerate}
-        \item First
+        \item 
         \begin{enumerate}
             \item 1 LOAD r3, M\\
             2 LOAD r0, \#1\\
@@ -40,20 +41,44 @@
             where \# indicates immediate addressing and BNE stands for "branch if not equal"
             \\
             \item other point
-            \item The table \ref{table:1} is an example of referenced \LaTeX elements.
- 
+            \item 
             \begin{table}[h!]
             \centering
-            \begin{tabular}{||c||c c c c c c c||} 
+            \begin{tabular}{||c||c|c|c|c|c|c|c||} 
              \hline
-              & IF & ID & IW & RR & EX & WB & Comments\\ [0.5ex] 
+              & F & D & IW & R & E & W & Comments\\ [0.5ex] 
              \hline\hline
-             1 & 2 & 3 & 4 & 5 & 6 & 7 & This is a long explanation\\ 
-             2 & 7 & 78 & 5415 & 5 & 6 & 7 &  \\
-             3 & 545 & 778 & 7507 & 5 & 6 & 7 & \\
-             4 & 545 & 18744 & 7560 & & & & \\
-             5 & 88 & 788 & 6344 & & & & \\  
-             6 & 88 & 788 & 6344 & & & & \\
+             1 & I1 & & & & & & \\ 
+             2 & I2 & I1 & & & & &  \\
+             3 & I3 & I2 & & & I1 & & I1 skips R\\
+             4 & I4 & I3 & I2 & & & I1 & \\
+             5 & I5 & I4 & I3 & & & I2 & I3 skip R,E\\  
+             6 & I6 & I5 & I4 & & & I3 & I4 skips R,E\\
+             7 & I7 & I6 & & I5 & & I4 & \\
+             8 & I8 & I7 & & I6 & I5 & & \\
+             9 & I9 & I8 & I7 & & I6 & I5 & r3 = 4\\
+             10 & I10 & I9 & I7, I8 & & & I6 & r4 not ready\\
+             11 & I11 & I10 & I8, I9 & I7 & & & Read busy\\
+             12 & I12 & I11 & I9, I10 & I8 & I7 & & Read busy for I9\\
+             13 & & I12 & I11, I10 & I9 & & I7 & I8, I9, I10 skips E and W busy\\
+             14 & & & I11, I12 & I10 & & I8 & R busy\\
+             15 & & & I12 & I11 & & I9 & \\
+             16 & & & I12 & \textbf{X} & I11 & I10 & Condition holds\\
+             17 & & & I12 & \textbf{X} & & I11 & PC updated, I12 discarded\\
+             18 & I5 & & & \textbf{X} & & & \\
+             19 & I6 & I5 & & \textbf{X} & & & \\
+             20 & I7 & I6 & & I5 & & & \\
+             21 & I8 & I7 & & I6 & I5 & & \\
+             22 & I9 & I8 & I7 & & I6 & I5 & r3 = 3\\
+             23 & I10 & I9 & I7, I8 & & & I6 & r4 not ready\\
+             24 & I11 & I10 & I8, I9 & I7 & & & Read busy\\
+             25 & I12 & I11 & I9, I10 & I8 & I7 & & Read busy for I9\\
+             26 & & I12 & I10, I11 & I9 & & I7 & I8, I9, I10 skips E and w busy\\
+             27 & & & I11, I12 & I10 & & I8 & R busy\\
+             28 & & & I12 & I11 & & I9 & \\
+             29 & & & I12 & \textbf{X} & I11 & I10 & Condition fails\\
+             30 & & & & I12 & & & No need to update PC\\
+             31 & & & & & I12 & & \\
              [1ex]
              \hline
             \end{tabular}
