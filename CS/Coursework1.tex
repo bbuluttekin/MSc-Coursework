@@ -40,7 +40,7 @@
             \\
             where \# indicates immediate addressing and BNE stands for "branch if not equal"
             \\
-            \item other point
+            \item F stage is first stage for all the instructions, where they loaded onto CPU. D is the stage where fetched instructions decoded. We assume data transfer between main memory and CPU happens E (execution) stage and using immediate addressing skips R and E stages. For immediate addressing data is written back to register in W stage. All arithmetic instructions will go through R, E stages and written back to register in W stage. If any instruction that can not move forward to further stages after the D stage for any reason, will be hold in IW (instruction window) until the restriction of the instruction is lifted. For example E stage is busy while next stage is execution or register instruction depends on is not ready for read.
             \clearpage
             \item Below is the pipeline for execution of program where k = 5
             \begin{table}[h!]
@@ -53,7 +53,7 @@
              2 & I2 & I1 & & & & &  \\
              3 & I3 & I2 & & & I1 & & I1 skips R\\
              4 & I4 & I3 & I2 & & & I1 & \\
-             5 & I5 & I4 & I3 & & & I2 & I3 skip R,E\\  
+             5 & I5 & I4 & I3 & & & I2 & I2, I3 skip R,E\\  
              6 & I6 & I5 & I4 & & & I3 & I4 skips R,E\\
              7 & I7 & I6 & & I5 & & I4 & \\
              8 & I8 & I7 & & I6 & I5 & & \\
@@ -92,7 +92,9 @@
         10 ms = 1 $\times 10^{-2}$ seconds\\
         \\
         Probability of being in main memory is 0.7 and cache hit ratio is 0.4. Therefore time to load is:\\
-        0.7 $\times$ 1 $\times 10^{-2}$ + 0.3 $\times$ (0.4 $\times$ 15$\times 10^{-9}$ + 0.6 $\times$ 85$\times 10^{-9}$)
+        $0.7 \times (1 \times 10^{-2} + 85 \times 10^{-9} + 15 \times 10^{-9}) + 0.3 \times (0.4 \times 15 \times 10^{-9} + 0.6 \times (85 \times 10^{-9} + 15 \times 10^{-9}))$\\
+        $7,0000898 \times 10^{-2}$\\
+        $\approx 7 ms$
 
     \end{enumerate}
 
