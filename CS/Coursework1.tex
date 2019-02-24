@@ -9,13 +9,13 @@
             \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
             \rule[0.5ex]{\linewidth}{1pt}\\[\baselineskip]
             %title of the report
-            \huge{\bfseries Computer Systems\\Coursework 1}\\[4mm]
+            \huge{\bfseries Computer Systems\\Coursework Part 1}\\[4mm]
             \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
             \rule[0.5ex]{\linewidth}{2pt}\\
             [2.5cm]
         
-            \textsc{\Large Baran Buluttekin}\\
-            [2.5cm]
+            \textsc{\Large Baran Buluttekin\\13153116}\\
+            [1.5cm]
             \large \textit{ I have read and understood the sections of plagiarism in the College Policy on assessment offences and confirm that the work is my own, with the work of others clearly acknowledged. I give my permission to submit my report to the plagiarism testing database that the College is using and test it using plagiarism detection software, search engines or meta-searching software.}
 
 
@@ -40,7 +40,7 @@
             \\
             where \# indicates immediate addressing and BNE stands for "branch if not equal"
             \\
-            \item F stage is first stage for all the instructions, where they loaded onto CPU. D is the stage where fetched instructions decoded. We assume data transfer between main memory and CPU happens E (execution) stage and using immediate addressing skips R and E stages. For immediate addressing data is written back to register in W stage. All arithmetic instructions will go through R, E stages and written back to register in W stage. If any instruction that can not move forward to further stages after the D stage for any reason, will be hold in IW (instruction window) until the restriction of the instruction is lifted. For example E stage is busy while next stage is execution or register instruction depends on is not ready for read.
+            \item F (fetch) stage is first stage for all the instructions, where they loaded onto CPU. D (decode) is the stage where fetched instructions decoded. We assume data transfer between main memory and CPU happens E (execution) stage and using immediate addressing skips R (read) and E stages. For immediate addressing data is written back to register in W (write) stage. All arithmetic instructions will go through R, E stages and written back to register in W stage. If any instruction that can not move forward to further stages after the D stage for any reason, will be hold in IW (instruction window) until the restriction of the instruction is lifted. For example E stage is busy while next stage is execution or register instruction depends on is not ready for read.
             \clearpage
             \item Below is the pipeline for execution of program where k = 5
             \begin{table}[h!]
@@ -91,10 +91,10 @@
         85 ns = 85$\times 10^{-9}$ seconds\\
         10 ms = 1 $\times 10^{-2}$ seconds\\
         \\
-        Probability of being in main memory is 0.7 and cache hit ratio is 0.4. Therefore time to load is:\\
+        Probability of being in main memory is 0.7 and cache hit ratio is 0.4. Therefore average time to load is:\\
         $0.7 \times (1 \times 10^{-2} + 85 \times 10^{-9} + 15 \times 10^{-9}) + 0.3 \times (0.4 \times 15 \times 10^{-9} + 0.6 \times (85 \times 10^{-9} + 15 \times 10^{-9}))$\\
-        $7,0000898 \times 10^{-2}$\\
-        $\approx 7 ms$
+        $0,70000198 \times 10^{-2} seconds $\\
+        $\approx 0,7 ms$
 
     \end{enumerate}
 
