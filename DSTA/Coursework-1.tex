@@ -1,7 +1,65 @@
-\documentclass{article}
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+ 
+\usepackage{biblatex}
+\addbibresource{cw1.bib}
+
+\newcommand{\numpy}{{\tt numpy}}    % tt font for numpy
+
+\topmargin -.5in
+\textheight 9in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\textwidth 7in
 
 \begin{document}
-    \title{Data Science Teqniques and Applications\\Coursework 1}
-    \author{Baran Buluttekin}
-    \maketitle
+
+% ========== Edit your name here
+\author{Baran Buluttekin}
+\title{Data Science Techniques and Applications\\Coursework I}
+\date{March 8, 2019}
+\maketitle
+
+\medskip
+\textbf{Phase I}\\
+\indent For this coursework after some searching I choose to examine Heart Disease UCI dataset in kaggle. It comprises of data that collected from patients from 4 medical institutions. There is no timestamp associated with data collections but according to UCI website data donated at 1988. Its primarily used for classification machine learning tasks.
+
+Dataset have total of 303 observations (rows) and 14 columns (features). Below is list of complete feature attributes:
+\begin{quote}
+\begin{enumerate}
+    \item age: Age in years (max:77, min:29)
+    \item sex: Sex (1:Male, 0:Female)
+    \item cp: Chest pain type
+    \begin{enumerate}
+        \item Value 1: typical angina
+        \item Value 2: atypical angina 
+        \item Value 3: non-anginal pain 
+        \item Value 4: asymptomatic 
+    \end{enumerate}
+    \item trestbps: Resting blood pressure (in mm Hg on admission to the hospital)
+    \item chol: Serum cholestoral in mg/dl 
+    \item fbs: Fasting blood sugar $>$ 120 mg/dl (1:true, 0:false)
+    \item restecg: Resting electrocardiographic results
+    \begin{enumerate}
+        \item Value 0: normal 
+        \item   Value 1: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of $>$ 0.05 mV)
+        \item Value 2: showing probable or definite left ventricular hypertrophy by Estes' criteria 
+    \end{enumerate}
+    \item thalach: Maximum heart rate achieved
+    \item exang: Exercise induced angina (1:yes, 0:no)
+    \item oldpeak: ST depression induced by exercise relative to rest
+    \item slope: The slope of the peak exercise ST segment
+    \begin{enumerate}
+        \item Value 1: upsloping 
+        \item Value 2: flat 
+        \item Value 3: downsloping
+    \end{enumerate}
+    \item ca: number of major vessels (0-3) colored by flourosopy
+    \item thal: 3:normal, 6:fixed defect, 7:reversable defect
+    \item target: Outcome (1:Heart disease, 0:Normal)
+\end{enumerate}
+\end{quote}
+
+\printbibliography
 \end{document}
