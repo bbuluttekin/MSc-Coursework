@@ -4,6 +4,7 @@
 __pycache__
 .ipynb_checkpoints
 mongon.json
+*.csv
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
