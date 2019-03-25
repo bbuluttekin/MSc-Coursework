@@ -29,7 +29,7 @@
 
 \medskip
 
-\indent We can start of our analysis by getting the dataset. Corresponding Heart Diseases dataset\cite{kaggle}\cite{uci-source} can be downloaded from kaggle by clicking download link in the website. When the download finished we received compressed version of file named \textit{heart-disese-uci.zip}. Fallowing the un-compression of the file we will obtain csv file \textit{heart.csv} which is in final format for analysis. 
+\indent We can start of our analysis by getting the dataset. Corresponding Heart Diseases dataset\cite{uci-source, kaggle} can be downloaded from kaggle by clicking download link in the website. When the download finished we received compressed version of file named \textit{heart-disese-uci.zip}. Fallowing the un-compression of the file we will obtain csv file \textit{heart.csv} which is in final format for analysis. 
 
 Next step is to loading python libraries to start the analysis. In this coursework fallowing open source libraries used:
 \begin{enumerate}
@@ -39,7 +39,7 @@ Next step is to loading python libraries to start the analysis. In this coursewo
     \item \textbf{Scikit-Learn: }Open source machine learning library that includes various machine learning algorithms.\cite{scikit-learn}
 \end{enumerate}
 
-As a first step libraries above loaded in python in the fallowing format.
+As a first step libraries mentioned above loaded in python in the fallowing format.
 
 \begin{python}
     import pandas as pd
@@ -71,7 +71,7 @@ With the help of pandas library we can load the dataset and view first 5 rows to
      \end{tabular}
     \end{table}
 
-Fallowing the guide of coursework, I choose "age", "chol" and "trestbps" as important dimensions. Description of the columns from the coursework I is given below as a reminder.
+Fallowing the guide of coursework, I choose "age", "chol" and "trestbps" as an important dimensions. Description of the columns from the coursework I is given below as a reminder.
 
 \begin{quote}
     \begin{enumerate}
@@ -81,7 +81,7 @@ Fallowing the guide of coursework, I choose "age", "chol" and "trestbps" as impo
     \end{enumerate}
 \end{quote}
 
-In order to get a better grasp of the data distribution with these three variables, I will use pairplot. Pairplot will help us see different variation of these three variable with each other and with relation to the target outcome of the dataset.
+In order to get a better grasp of the data distribution with these three variables, I will use pairplot. Pairplot will help us see different scatterplot variation of these three variable with each other and with relation to the target outcome of the dataset.
 
 \begin{python}
     selected_dims = ["age", "chol", "trestbps", "target"]
@@ -98,9 +98,9 @@ We can also plot these 3 dimensions in 3D plot to see their relation to target v
 
 \begin{python}
     def plot_3d(dataframe, x_label, y_label, z_label, target_label, title):
-        labelTups = [("Normal", 0), ("Hearth Desease", 1)]
+        labelTp = [("Normal", 0), ("Hearth Desease", 1)]
         fig = plt.figure(1, figsize=(8, 6))
-        ax = Axes3D(fig, elev=-150, azim=110)
+        ax = Axes3D(fig, elev=-140, azim=110)
         ax.scatter(dataframe[x_label], dataframe[y_label], dataframe[z_label], c=dataframe[target_label],
                     cmap=plt.cm.Set1, edgecolor='k', s=40)
         ax.set_title(title)
@@ -113,10 +113,10 @@ We can also plot these 3 dimensions in 3D plot to see their relation to target v
 
         sc = ax.scatter(dataframe[x_label], dataframe[y_label], dataframe[z_label], c=dataframe[target_label], cmap="Spectral", edgecolor='k')
 
-        colors = [sc.cmap(sc.norm(i)) for i in [1, 0]]
-        custom_lines = [plt.Line2D([],[], ls="", marker='.', 
-                        mec='k', mfc=c, mew=.1, ms=20) for c in colors]
-        lgd = ax.legend(custom_lines, [lt[0] for lt in labelTups], 
+        clrs = [sc.cmap(sc.norm(x)) for x in [1, 0]]
+        custom_l = [plt.Line2D([],[], ls="", marker='.', 
+                        mec='k', mfc=i, mew=.1, ms=20) for i in clrs]
+        lgd = ax.legend(custom_l, [l[0] for l in labelTp], 
                     loc='center left', bbox_to_anchor=(1.0, .5))
         plt.show()
 \end{python}
@@ -131,13 +131,14 @@ We can observe their relationships by calling the function with the \textit{"age
     \centering
     \includegraphics[width=\textwidth]{img/3d-selected.png}
     \caption{3D graph of the selected dimensions.}
+    \label{3D:graph}
 \end{figure}
 
 \section*{Applying PCA On Dataset}
 
 Principle Component Analysis can be compute by computing standard matrix factorization technique called \textit{Singular Value Decomposition} (SVD) that can essentially decompose training matrix $X$ into dot product of three matrices $U \cdot \sum \cdot V^{H}$ where $V^{H}$ is the eigenvectors. 
 
-I will be using Scikit Learn PCA class to obtain principle component analysis of the dataset. Using Scikit Learn is relatively straight forward since the library has unified API for all the algorithms. First I will start with initiating class instance then \textit{fit\_transform} method can be called on that instance while passing dataset. User can specify the \textit{n\_components} they wish to receive in the class instance as an attribute and the result of PCA will be same number of dimensions for decomposed matrix. In the fallowing example I choose '3' components and received the three dimensional decompose matrix.  
+I will be using Scikit Learn PCA class to obtain principle component analysis of the dataset. Using Scikit Learn is relatively straight forward since the library has unified API for all the algorithms. I will start with initiating class instance then \textit{fit\_transform} method can be called on that instance while passing dataset. User can specify the \textit{n\_components} they wish to receive in the class instance as an attribute and the result of PCA will be same number of dimensions for decomposed matrix. In the fallowing example I choose '3' components and received the three dimensional PCA matrix.  
 
 \begin{python}
     pca = PCA(n_components=3)
@@ -151,7 +152,7 @@ I will be using Scikit Learn PCA class to obtain principle component analysis of
        [106.97905333, -15.87446784, -14.8615748 ]])
 \end{python}
 
-Yet choosing arbitrary number for components not a good practice and do not tell us anything about nature of the decomposed matrix. It is usually more sensible to choose number of components based on the percentage of variance (e.g., 95\%) of the data. Scikit Learn has useful \textit{explained\_variance\_ratio\_} attribute available which is generated from fitting the data. This attribute give us the percentage of explained variance in each of the components of decomposition. For above example we can retrieve the expected variance.
+Yet choosing arbitrary number for components not a good practice and do not tell us anything about nature of the decomposed matrix. It is usually more sensible to choose number of components based on the percentage of variance (e.g., 95\%) of the data. Scikit Learn has useful \textit{explained\_variance\_ratio\_} attribute available which is generated from fitting the data. This attribute give us the percentage of explained variance in each of the components of decomposition. For above example we can retrieve the explained variance with the code below.
 
 \begin{python}
     pca.explained_variance_ratio_
@@ -173,7 +174,7 @@ In order to choose number of components that will give us the total explained va
     >>> 3
 \end{python}
 
-We can observe from the example above in fact three components are enough to reach over 95\% variance in this dataset. Another way to obtain PCA values with same level of variance is to pass the ratio to PCA instance as a number of components. For example \textit{PCA(n\_components=0.95)} will also give us same result. In some cases it might be useful to visualize the number of components as a variable of explained variance and choose the desired number of components.
+We can observe from the example above in fact three components are enough to reach over 95\% variance in this dataset. Another way to obtain PCA values with same ratio of variance is to pass the ratio to PCA instance as a number of components. For example \textit{PCA(n\_components=0.95)} will also give us same result. In some cases it might be useful to visualize the number of components as a variable of explained variance and choose the desired number of components from the graph.
 
 \begin{python}
     plt.plot(list(range(1, len(cum_sum) + 1)), cum_sum)
@@ -190,9 +191,9 @@ We can observe from the example above in fact three components are enough to rea
 Given that we choose the number of components, we can plot the PCA values and observe how they represent the dataset.
 
 \begin{python}
-    labelTups = [("Normal", 0), ("Hearth Desease", 1)]
-    fig = plt.figure(1, figsize=(8, 6))
-    ax = Axes3D(fig, elev=-150, azim=110)
+    labelTp = [("Normal", 0), ("Hearth Desease", 1)]
+    fig = plt.figure(1, figsize=(10, 6))
+    ax = Axes3D(fig, elev=-140, azim=110)
     ax.scatter(df_reduced[:, 0], df_reduced[:, 1], df_reduced[:, 2], c=y,
             cmap=plt.cm.Set1, edgecolor='k', s=40)
     ax.set_title("PCA with 3 components")
@@ -205,10 +206,10 @@ Given that we choose the number of components, we can plot the PCA values and ob
 
     sc = ax.scatter(df_reduced[:, 0], df_reduced[:, 1], df_reduced[:, 2], c=y, cmap="Spectral", edgecolor='k')
 
-    colors = [sc.cmap(sc.norm(i)) for i in [1, 0]]
-    custom_lines = [plt.Line2D([],[], ls="", marker='.', 
-                    mec='k', mfc=c, mew=.1, ms=20) for c in colors]
-    ax.legend(custom_lines, [lt[0] for lt in labelTups], 
+    clrs = [sc.cmap(sc.norm(x)) for x in [1, 0]]
+    custom_l = [plt.Line2D([],[], ls="", marker='.', 
+                    mec='k', mfc=i, mew=.1, ms=20) for i in clrs]
+    ax.legend(custom_l, [l[0] for l in labelTp], 
             loc='center left', bbox_to_anchor=(1.0, .5))
 \end{python}
 
@@ -216,7 +217,11 @@ Given that we choose the number of components, we can plot the PCA values and ob
     \centering
     \includegraphics[width=\textwidth]{img/pca.png}
     \caption{Heart Disease dataset with reduced dimensions.}
+    \label{pca:graph}
 \end{figure}
+
+Plot of PCA values clearly shows that even though complexity of the dataset reduced it did not helped data to be linearly separable. In some cases such as Swiss roll example\cite{Gron:2017:HML:3153997} PCA can help increase linear or simpler decision boundaries to separate the data but it is not always the case and this generally depends on the data. In my dataset, inherent noise in the data we observed from the Figure \ref{3D:graph} preserved in the Figure \ref{pca:graph} and data remains linearly non-separable.
+
 
 \printbibliography
 \end{document}
