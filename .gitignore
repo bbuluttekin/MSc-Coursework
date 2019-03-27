@@ -5,6 +5,7 @@ __pycache__
 .ipynb_checkpoints
 mongon.json
 *.csv
+word_count_out/
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
