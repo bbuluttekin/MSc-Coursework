@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+\usepackage{enumerate}
+\usepackage{longtable}
+
+\usepackage{amsmath}
+
+\begin{document}
+    \begin{titlepage}
+        \begin{center}
+            \vspace*{.06\textheight}{\scshape\LARGE Birkbeck, University of London\par}\vspace{1.5cm} % University name
+            \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
+            \rule[0.5ex]{\linewidth}{1pt}\\[\baselineskip]
+            %title of the report
+            \huge{\bfseries Computer Systems\\Coursework Part 2}\\[4mm]
+            \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+            \rule[0.5ex]{\linewidth}{2pt}\\
+            [2.5cm]
+        
+            \textsc{\Large Baran Buluttekin\\13153116}\\
+            [1.5cm]
+            \large \textit{ I have read and understood the sections of plagiarism in the College Policy on assessment offences and confirm that the work is my own, with the work of others clearly acknowledged. I give my permission to submit my report to the plagiarism testing database that the College is using and test it using plagiarism detection software, search engines or meta-searching software.}
+
+
+        \end{center}
+    \end{titlepage}
+    \section*{Answers}
+    \begin{enumerate}
+        \item
+        \begin{enumerate}
+            \item In uniprogramming jobs runs sequentially.\\
+            Firs job have 20 s CPU time and 60 s I/O time  (20 + 60) = 80 s\\
+            Second job have 30 s CPU and 60 s I/O time (30 + 60) = 90 s\\
+            Third job have 40 s CPU and 60 s I/O time (40 + 60) = 100 s\\
+            \item Multiprogramming  
+            
+        \end{enumerate}
+
+
+        \item 
+        TLB lookup: 100 ns\\
+        TLB update 200 ns\\
+        PT lookup $1 \mu s$ = 1000 ns\\
+        PT update $2 \mu s$ = 2000 ns\\
+
+        In case of the TLB lookup: 100 ns\\
+        In case of the PT lookup: 100 + 1000 + 200 = 1300 ns\\
+        weighted average for this scenario: $0.4 \times 100 + 0.6 \times 1300 = 820 ns$\\
+
+        Loading word from main memory: 10 $\mu s$ = 10000 ns\\
+        Loading page from disk: 10 ms = $10^{7} ns$\\
+
+        In case its in memory: $10 \mu s$\\
+        In case reading from disk: $10^{4} + 10 + 20 = 10,030   \mu s$\\ 
+        $(0.3 \times 10000) + (0.7 \times (10^{7} + 10000 + 2000)) = 7,024 \mu s$
+
+        \item First 40 seconds there is only Type 4 jobs present given each of them have run time of 2, in total 20 of this jobs will run. Remaining number of Type 4 jobs: 60\\
+        From 40 to 50 seconds Type 1 jobs will arrive and because of their priority only these jobs will run and total of 10 will run until 50. Remaining number of Type 1 jobs: 10\\
+        From 50 to onwards all jobs arrived at the center and until high priori Type 1 and Type 2 jobs all finishes only these jobs will run. 
+
+        (0 - 40)   \space\space:1 (20), 3 (20), 4 (60)\\
+        (40 - 50)  \space:1 (10), 2 (30),  3 (20), 4 (60)\\
+        (50 - 70)  \space:1 (0), 2 (25), 3 (20), 4 (60)\\ 
+        (70 - 120) :2 (0), 3 (20), 4 (60)\\
+        (120 - 160):3(0), 4 (50)\\
+        (160 - 260):4(0)\\
+
+        \begin{equation*}
+        \frac{(70 - 40)+(120 - 50)+(160 - 40)+(260 - 0)}{20 + 30 + 20 +80} = \frac{480}{150} = 3.2 (sec)
+        \end{equation*}
+
+    \end{enumerate}
+
+\end{document} 
