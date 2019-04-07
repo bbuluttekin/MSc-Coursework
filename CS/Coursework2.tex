@@ -31,7 +31,11 @@
             Firs job have 20 s CPU time and 60 s I/O time  (20 + 60) = 80 s\\
             Second job have 30 s CPU and 60 s I/O time (30 + 60) = 90 s\\
             Third job have 40 s CPU and 60 s I/O time (40 + 60) = 100 s\\
-            \item Multiprogramming  
+            Overall runtime = 80 + 90 + 100 = 270 s
+            \item In multiprogramming CPU time can be allocated to other jobs while in I/O process.\\
+            In optimal option job with 40 s CPU time can start first after 40 s it will need 60 s I/O time during which 30 s and 20 s jobs can get CPU time and I/O time for 20 s job will have the last to finish.
+            Overall run time:\\
+            40 + 30 + 20 + 60 = 150 s 
             
         \end{enumerate}
 
@@ -39,19 +43,21 @@
         \item 
         TLB lookup: 100 ns\\
         TLB update 200 ns\\
-        PT lookup $1 \mu s$ = 1000 ns\\
-        PT update $2 \mu s$ = 2000 ns\\
+        PT lookup $1 \mu s$: 1000 ns\\
+        PT update $2 \mu s$: 2000 ns\\
+        Loading word from memory: 10 000 ns\\
+        Loading page from disk: $10^{7}$ ns\\
 
-        In case of the TLB lookup: 100 ns\\
-        In case of the PT lookup: 100 + 1000 + 200 = 1300 ns\\
-        weighted average for this scenario: $0.4 \times 100 + 0.6 \times 1300 = 820 ns$\\
+        In case of TLB hit:\\
+        $100 + 1000 = 1100$\\
 
-        Loading word from main memory: 10 $\mu s$ = 10000 ns\\
-        Loading page from disk: 10 ms = $10^{7} ns$\\
+        In case of TLB miss and in main memory:\\
+        $100 + 1000 + 200 + 10 000 = 11 300$\\
 
-        In case its in memory: $10 \mu s$\\
-        In case reading from disk: $10^{4} + 10 + 20 = 10,030   \mu s$\\ 
-        $(0.3 \times 10000) + (0.7 \times (10^{7} + 10000 + 2000)) = 7,024 \mu s$
+        In case of TLB miss and loading from disk:\\
+        $100 + 1000 + 10^{7} + 10000 + 2000 + 200 = 10013300$
+
+        Access time: $0.4 \cdot 1100 + 0.6 \cdot (0.3 \cdot 11300 + 0.7 \cdot 10013300) \\ = 4208060 \approx 4.21 ms$
 
         \item First 40 seconds there is only Type 4 jobs present given each of them have run time of 2, in total 20 of this jobs will run. Remaining number of Type 4 jobs: 60\\
         From 40 to 50 seconds Type 1 jobs will arrive and because of their priority only these jobs will run and total of 10 will run until 50. Remaining number of Type 1 jobs: 10\\
