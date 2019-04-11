@@ -14,7 +14,7 @@ class MRWordCountPairs(MRJob):
 
         self.add_passthru_arg(
             '--searchword', dest='searchword', default="my", type=str,
-            help='Specifiy the word you want to count.')
+            help='Specify the word you want to count.')
 
     def mapper_words(self, _, line):
         line = line.split(",")[1]  # Strip away the joke ID
