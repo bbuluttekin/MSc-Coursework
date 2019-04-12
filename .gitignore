@@ -6,6 +6,8 @@ __pycache__
 mongon.json
 *.csv
 word_count_out/
+pagerank_out/
+.txt
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
