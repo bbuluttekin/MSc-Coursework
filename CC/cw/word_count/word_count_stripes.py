@@ -33,7 +33,8 @@ class MRWordCountStripes(MRJob):
         yield key, sum(count)
 
     def reducer_words(self, key, count):
-        yield None, (key, sum(count))  # Key value pairs added to array.
+        # None key will pass all words to single reducer
+        yield None, (key, sum(count))
 
     def ratio_calculation(self, _, word_count_pair):
         top10 = {}
