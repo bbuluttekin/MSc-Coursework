@@ -7,7 +7,8 @@ mongon.json
 *.csv
 word_count_out/
 pagerank_out/
-.txt
+*.txt
+.mrjob.conf
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
