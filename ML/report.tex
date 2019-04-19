@@ -1,15 +1,89 @@
-\documentclass[12pt]{report}
-
+\documentclass[12pt]{article}
+% Machine Learning - COIY065H7\\Coursework Report
 \usepackage[margin=1in,left=1.5in,includefoot]{geometry}
-
 \usepackage{pythonhighlight}
 % Header and Footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\fancyfoot{}
-\fancyfoot[R]{\thepage}
+%\fancyfoot{}
+%\fancyfoot[R]{\thepage}
 
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[usestackEOL]{stackengine}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{multirow}
+%\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\usepackage{amsmath,bm}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+%\usepackage[round]{natbib}
+\usepackage{enumitem,xcolor}
+\usepackage[multiple]{footmisc}
 
+\usepackage{adjustbox}
+\usepackage{kantlipsum}
+\usepackage{tikz}
+\usepackage[labelfont=bf]{caption}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{8} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{8}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{coolblue}{HTML}{101094}
+
+\usepackage{listings}
+
+\definecolor{codebg}{RGB}{238,238,238}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+    language=Python,
+    basicstyle=\ttm,
+    otherkeywords={},             % Add keywords here
+    keywordstyle=\ttm\color{coolblue},
+    emph={MyClass},          % Custom highlighting
+    emphstyle=\ttm\color{deepred},    % Custom highlighting style
+    stringstyle=\color{deepgreen},
+    frame=tb,                         % Any extra options here
+    framesep=10pt,
+    framexleftmargin=10pt,
+    backgroundcolor=\color{codebg},
+    rulecolor=\color{codebg},
+    aboveskip=15pt,
+    belowskip=15pt,
+    showstringspaces=false            % 
+}}
+
+% Python environment
+%\lstnewenvironment{python}[1][] {
+%    \pythonstyle
+%    \lstset{#1}
+%}{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\usepackage{biblatex}
+\addbibresource{mlref.bib}
+
+%\usepackage{amsmath}
 
 \begin{document}
 
@@ -18,66 +92,28 @@
         \vspace*{.06\textheight}{\scshape\LARGE Birkbeck, University of London\par}\vspace{1.5cm} % University name
         \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
         \rule[0.5ex]{\linewidth}{1pt}\\[\baselineskip]
+        %title of the report
         \huge{\bfseries Machine Learning - COIY065H7\\Coursework Report}\\[4mm]
         \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
         \rule[0.5ex]{\linewidth}{2pt}\\
+        [2.5cm]
+    
+        \textsc{\Large Baran Buluttekin\\13153116}\\
         [1.5cm]
+        \large \textit{ I have read and understood the sections of plagiarism in the College Policy on assessment offences and confirm that the work is my own, with the work of others clearly acknowledged. I give my permission to submit my report to the plagiarism testing database that the College is using and test it using plagiarism detection software, search engines or meta-searching software.}
 
 
-        \begin{minipage}[t]{0.4\textwidth}
-        \begin{flushleft} \large
-        \emph{Author:}\\
-        {Baran} % Author name - remove the \href bracket to remove the link
-        \end{flushleft}
-        \end{minipage}
-        \begin{minipage}[t]{0.4\textwidth}
-        \begin{flushright} \large
-        \emph{Supervisor:} \\
-        {George} % Supervisor name - remove the \href bracket to remove the link  
-        \end{flushright}
-        \end{minipage}\\
-        [3cm]
-
-            \vfill
-
-            \large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of MSc Data Science}\\[0.3cm] % University requirement text
-            \textit{in the}\\[0.4cm]
-            Department of Computer Science\\[2cm] % Research group name and department name
- 
-            \vfill
-
-            {\large \today}\\[4cm] % Date
-            %\includegraphics{Logo} % University/department logo - uncomment to place it
- 
-            \vfill
     \end{center}
-\end{titlepage}    
+    \cleardoublepage
+\end{titlepage}   
+
 
 \pagenumbering{roman}
 \section*{Abstract}
-\addcontentsline{toc}{section}{\numberline{}Abstract}
+\addcontentsline{toc}{section}{Abstract}
 This is placeholder text. To add more information type it after this line.\\
 \cleardoublepage
 
-
-\section*{Declaration}
-\addcontentsline{toc}{section}{\numberline{}Declaration}
-I hearby declare this file a text.
-
-\begin{python}
-    import pymongo as pm
-    import json
-
-    with open("DSTA/Lab/mongo.json") as f:
-    url = json.load(f)
-
-
-    c = pm.MongoClient(url["url"])
-
-    print(c.admin)
-\end{python}
-and text goes on.\\
-\cleardoublepage
 
 \tableofcontents
 \thispagestyle{empty}
@@ -88,11 +124,130 @@ and text goes on.\\
 
 
 
-\section{Introduction}
-Lorem ipsum
-test display 
+\section{Introduction} \label{sec:introduction}
+This report is part of the coursework for \textit{Machine Learning} (COIY065H7) module. From the coursework instructs Yeast data \cite{data} has chosen as the dataset.
+
+\subsection{Dataset} \label{subsec:data}
+
+Yeast dataset is part of the UCI machine learning repository where variety of machine learning related datasets curated. This dataset includes properties of yeast proteins to predict localization site of the protein. Number of data points in the dataset is 1484 and have 9 features in which only 8 of them are predictive feature. First feature is only index indicating database of that data acquired and have no predictive purpose. Final column of the data set provides label for protein class that we are aiming to predict. This dataset have no missing values. Given the labelled nature of the data this classification problem can be solved using \textit{supervised learning}.
+
+\subsubsection{Problem Statement} \label{subsec:problem}
+
+There are some additional properties of this data makes classification task challenging. Firstly this is a multi class classification problem, because our dataset have 10 distinct labels. Labels extracted from dataset are, 'MIT', 'NUC', 'CYT', 'ME1', 'EXC', 'ME2', 'ME3', 'VAC', 'POX' and 'ERL'. Secondary challenge is that this dataset have class imbalance. Number of instances varies form 463 observation of 'CYT' to 5 instances of 'ERL'.
+
+\section{Algorithms and Techniques} \label{sec:algo}
+
+There are number of techniques and algorithms introduced to address the challenges mentioned in the subsection \ref{subsec:problem}. I will list some of this techniques below and explain more detailed in the fallowing sections.
+
+\begin{itemize}
+    \item \textbf{Over-sampling data: }This method oversample the minority class in the data to create balanced classes.
+    \item \textbf{Under-sampling data: }Opposite of the item above this method under sample the majority class to balance the data.
+    \item \textbf{Balanced sampling for ensemble: }Sampling data in a balanced way while building ensemble models.
+    \item \textbf{Choosing performance matrix sensitive to imbalance: }Using evaluation metric such as ROC AUC instead of accuracy will better capture mis-classification errors.
+\end{itemize}
+
+Most of the techniques discussed above are implemented as a code package in imbalance-learn \cite{imbalancelearn}. In the case of over-sampling, only random sampling method available for multi class datasets. Choice of algorithm for under-sampling is substantially more than over-sampling. But due to the very large gap in the number of instances in the different classes, under-sampling can effect performance of the classification model significantly. For example if we were to under-sample until we reached to balance dataset because of the only 5 instance in the class 'ERL' we would get a dataset of 50 instances (10 class times 5 observation each). Regardless I will be using alternative under-sampling algorithm design to experiment their performance. 
+
+\subsection{Under-sampling methods} \label{subsec:undersample}
+
+In addition to random under-sampling method special algorithms to under-sample selectively will be used in experiments. One such algorithm is \textit{Condensed nearest neighbour} (CNN) \cite{condense}, utilizes one nearest neighbor rule to decide for each instance to be removed from the dataset or not. Algorithm steps from the article are \cite{condense}:
+
+\begin{quote}
+    "Get all minority samples in a set \textit{C}.
+
+    Add a sample from the targeted class (class to be under-sampled) in C and all other samples of this class in a set \textit{S}.
 
 
+    Go through the set S, sample by sample, and classify each sample using a 1 nearest neighbor rule.
+
+    If the sample is misclassified, add it to C, otherwise do nothing.
+
+    Reiterate on \textit{S} until there is no samples to be added."
+\end{quote}
+
+\textit{Neighbor cleaning rule} (NCL) \cite{neighborcleaning} is another algorithm that derived from CNN where more emphasis give to the data cleaning.
+
+\subsection{Sampling for ensemble} \label{subsec:ensemble}
+
+Ensemble models uses subset of the data with replacement while training different classifier but this sapling usually does not take class imbalance into account. Classifiers in the imbalance-learn library build in a way that sampling is done while maintaining the class balance. Below is the short description of these classifiers.
+
+\textit{Balanced random forest} \cite{rforestbalanced} classifier is design such a way that each bootstrap sample to train tree in the forest is supplied with balanced class subset.
+This algorithm uses classic random forest \cite{randomforest} implementation and only differs in the sampling methodology.
 
 
+\textit{RUSBoost} \cite{rusboost} also randomly sample data in balanced way before the boosting implemented.
+
+\textit{Easy Ensemble} \cite{adaboostbalance} is a AdaBoost \cite{adaboost} implementation trained on balanced bootstrap samples.
+
+\section{Methodology} \label{sec:method}
+As an initial step, I have loaded the dataset in a data frame which then allow for exploratory examination of the data. For that reason I have created a pairplot to observe if there is any linear separation is possible. With fallowing steps plot is created. All variable in the data is paired to each other except the "pox" and "erl" which behaves more like categorical data then continuous data.
+
+\begin{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/yeast/yeast.data"
+columns = ["mcg", "gvh", "alm", "mit", "erl", "pox", "vac", "nuc", "class"]
+df = pd.read_csv(url, header=None, sep=r"\s+", names=columns, usecols=list(range(1,10)))
+
+feature_list = [x for x in df.columns if x not in ['pox', 'erl']]
+# Plotting
+sns.pairplot(df[feature_list], hue='class')
+\end{python}
+
+\begin{figure}[H] \label{fig:pairplot}
+    \centering
+    \includegraphics[width=\textwidth]{img/pairplot.png}
+    \caption{Pairplot of the data.}
+\end{figure}
+
+\subsection{Data preprocessing} \label{subsec:preprocess}
+Data preprocessing is relatively simple for this dataset. There are no missing values and all data points are numeric which only leaves us to encode class variable to be able to feed into machine learning model. Judging from pairplot above classes have different range in some variable and can benefit min max scaling of the data. 
+
+This preparation can be streamlined with fallowing code.
+
+\begin{python}
+    def process_data(df):
+        encoder = LabelEncoder()
+        y = encoder.fit_transform(df['class'])
+        X = df[df.columns[:-1]].values
+        return X, y
+
+    def process_scaled_data(df):
+        l_encoder = LabelEncoder()
+        scaler = MinMaxScaler()
+        y = l_encoder.fit_transform(df['class'])
+        X = df[df.columns[:-1]].values
+        X = scaler.fit_transform(X)
+        return X, y
+\end{python}
+
+\subsection{Over-sampling and training model} \label{subsec:oversample}
+Defined over-sampling method will be applied and compare the result with the same classifier trained on the data to observe if over-sampling help the classification task. Similarly utility function is created for the ease of transformation.
+
+\begin{python}
+    def make_over_sample(X, y, random_state=0):
+        ros = RandomOverSampler(random_state=random_state)
+        return ros.fit_resample(X, y)
+\end{python}
+
+\subsection{Under-sample and train model} \label{subsec:compareundersample}
+
+I previously discuss that we have different algorithm for under-sampling and details for these algorithms given in the subsection \ref{subsec:undersample}. These algorithms implemented in imbalance-learn package as \textit{CondensedNearestNeighbour}, \textit{NeighbourhoodCleaningRule} and \textit{RandomUnderSampler}. Similarly these will be compared to base models trained on the data to evaluate if under-sampling helps the classification. Also implemented with utility function.
+
+\begin{python}
+    def make_under_sample(X, y, method=NeighbourhoodCleaningRule, random_state=0):
+        clf = method(random_state=random_state)
+        return clf.fit_resample(X, y)
+\end{python}
+
+\subsection{Comparison of ensemble models} \label{subsec:ensemblecomparison}
+
+
+\section{Experiments and Results} \label{sec:experiment}
+
+\section{Conclusion} \label{sec:conclution}
+
+\printbibliography
 \end{document}
