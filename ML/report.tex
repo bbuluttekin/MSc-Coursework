@@ -143,7 +143,7 @@ There are number of techniques and algorithms introduced to address the challeng
     \item \textbf{Over-sampling data: }This method oversample the minority class in the data to create balanced classes.
     \item \textbf{Under-sampling data: }Opposite of the item above this method under sample the majority class to balance the data.
     \item \textbf{Balanced sampling for ensemble: }Sampling data in a balanced way while building ensemble models.
-    \item \textbf{Choosing performance matrix sensitive to imbalance: }Using evaluation metric such as ROC AUC instead of accuracy will better capture mis-classification errors.
+    \item \textbf{Choosing performance matrix sensitive to imbalance: }Using evaluation metric such as f1 score instead of accuracy will better capture mis-classification errors.
 \end{itemize}
 
 Most of the techniques discussed above are implemented as a code package in imbalance-learn \cite{imbalancelearn}. In the case of over-sampling, only random sampling method available for multi class datasets. Choice of algorithm for under-sampling is substantially more than over-sampling. But due to the very large gap in the number of instances in the different classes, under-sampling can effect performance of the classification model significantly. For example if we were to under-sample until we reached to balance dataset because of the only 5 instance in the class 'ERL' we would get a dataset of 50 instances (10 class times 5 observation each). Regardless I will be using alternative under-sampling algorithm design to experiment their performance. 
@@ -242,8 +242,22 @@ I previously discuss that we have different algorithm for under-sampling and det
         return clf.fit_resample(X, y)
 \end{python}
 
-\subsection{Comparison of ensemble models} \label{subsec:ensemblecomparison}
+\subsection{Comparison of models} \label{subsec:comparison}
 
+All of the experimentations will be carried out by firstly splitting data to training and testing data. For the splitting \textit{StratifiedKFold} algorithm is chosen because of the minority class in the dataset. If the random splitting algorithm is used minority class can either not represented in test data or training data. StratifiedKFold will ensure each class is represented in the training and test dataset. All machine learning algorithm and sampling techniques will be applied to training data after the split so the effect of each process can be examined on unseen data when it tested with test data. This rule also applies to any scaling on the data. Applying scaling separately to test and training data especially important because applying scaling before splitting will cause information leakage and will cause to misleading results in testing.
+
+Main choice of evaluation metric for this classification is f1 score because of its nature of combining precision and recall. F1 score calculates as harmonic mean of precision and recall, calculated with formula:
+
+\begin{equation*}
+    H = \frac{n}{\frac{1}{x_{1}} + \frac{1}{x_{2}} + \cdots + \frac{1}{x_{n}}} = \frac{n}{\sum_{i=1}^n{\frac{1}{x_{i}}}}
+\end{equation*}
+
+\begin{equation*}
+    F_{1} = \frac{2}{\frac{1}{precision} + \frac{1}{recall}} = 2 \times \frac{precision \times recall}{precision + recall}
+\end{equation*}
+Harmonic mean differ from arithmetic mean in a way that it will give more weight to low value, hence f1 score will increase only if both precision and recall increases.
+
+In general first over-sampling and under-sampling method will be compared to classification models build on original data. Then another comparison will be drawn on balanced ensemble models versus general ensemble models which later all will be compared. This process will be repeated on the scaled data to observe scaling effect. All models will be trained with hyper-parameter tuning using cross validation.
 
 \section{Experiments and Results} \label{sec:experiment}
 
