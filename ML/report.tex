@@ -260,6 +260,48 @@ Harmonic mean differ from arithmetic mean in a way that it will give more weight
 In general first over-sampling and under-sampling method will be compared to classification models build on original data. Then another comparison will be drawn on balanced ensemble models versus general ensemble models which later all will be compared. This process will be repeated on the scaled data to observe scaling effect. All models will be trained with hyper-parameter tuning using cross validation.
 
 \section{Experiments and Results} \label{sec:experiment}
+\subsection{Ensemble models performance} \label{subse:ensemblemodelperformance}
+Selected ensemble models first trained with different hyper-parameters and best performing parameter selected to fit the data using number of estimators in all of the classifiers. Table below summarize the max f1 score for each classifier in training and test data. 
+
+\begin{center}
+    \begin{tabular}{||c c c||} 
+    \hline
+    Classifier & F1 score (training) & F1 score (test)\\ [0.5ex] 
+    \hline\hline
+    RandomForestClassifier & \textbf{1.0} & \textbf{0.6686} \\ 
+    \hline
+    AdaBoostClassifier & 0.3670 & 0.3892 \\
+    \hline
+    EasyEnsembleClassifier & 0.5001 & 0.5917 \\
+    \hline
+    BalancedRandomForestClassifier & 0.4890 & 0.5148 \\
+    \hline
+    BalancedBaggingClassifier & 0.5633 & 0.6035\\ [1ex] 
+    \hline
+   \end{tabular}
+\end{center}
+
+If we observe the f1 score of all the classifiers in the all n\_estimators we can see after the random forest best performing imbalanced ensemble model was BalancedBaggingClassifier.
+
+\begin{figure}[H] \label{fig:ensemblepf}
+    \centering
+    \includegraphics[width=\textwidth]{img/ensembletestf1.png}
+    \caption{F1 score of ensemble models.}
+\end{figure}
+
+We can investigate RandomForestClassifier predictions further by visualizing its confusion matrix.
+
+\begin{figure}[H] \label{fig:rfconfusion}
+    \centering
+    \includegraphics[width=\textwidth]{img/rfheatmap.png}
+    \caption{Confusion matrix of RandomForestClassifier.}
+\end{figure}
+
+We can see that "CYT" (0) class is often mis-classified as "NUC" (7) and vice versa. Rest of the classes predicted well.
+
+\subsection{Over-sampling v baseline classifiers}
+
+
 
 \section{Conclusion} \label{sec:conclution}
 
