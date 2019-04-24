@@ -44,6 +44,9 @@
 \definecolor{coolblue}{HTML}{101094}
 
 \usepackage{listings}
+\lstset{%
+   breaklines=true
+}
 
 \definecolor{codebg}{RGB}{238,238,238}
 
@@ -180,7 +183,9 @@ This algorithm uses classic random forest \cite{randomforest} implementation and
 \textit{Easy Ensemble} \cite{adaboostbalance} is a AdaBoost \cite{adaboost} implementation trained on balanced bootstrap samples.
 
 \section{Methodology} \label{sec:method}
-As an initial step, I have loaded the dataset in a data frame which then allow for exploratory examination of the data. For that reason I have created a pairplot to observe if there is any linear separation is possible. With fallowing steps plot is created. All variable in the data is paired to each other except the "pox" and "erl" which behaves more like categorical data then continuous data.
+As an initial step, I have loaded the dataset in a data frame using Pandas \cite{pandas} package which then allow for exploratory examination of the data. For that reason I have created a pairplot to observe if there is any linear separation is possible. With fallowing steps plot is created. All variable in the data is paired to each other except the "pox" and "erl" which behaves more like categorical data then continuous data.
+
+Base line machine algorithms like random forest, AdaBoost, Support vector classifier and others are part of Scikit-learn \cite{scikit-learn} package. All visualization created are achieved using Matplotlib \cite{matplotlib} and Seaborn \cite{seaborn} software packages. For reproducibility random number state is chosen and in variable named as RANDOM\_STATE. All non-deterministic algorithm uses this random generator seed.
 
 \begin{python}
 import pandas as pd
@@ -204,6 +209,8 @@ sns.pairplot(df[feature_list], hue='class')
 
 \subsection{Data preprocessing} \label{subsec:preprocess}
 Data preprocessing is relatively simple for this dataset. There are no missing values and all data points are numeric which only leaves us to encode class variable to be able to feed into machine learning model. Judging from pairplot above classes have different range in some variable and can benefit min max scaling of the data. 
+
+In later stages some scaling algorithms will be applied to data to observe its effects in the generalization.
 
 This preparation can be streamlined with fallowing code.
 
@@ -261,7 +268,7 @@ In general first over-sampling and under-sampling method will be compared to cla
 
 \section{Experiments and Results} \label{sec:experiment}
 \subsection{Ensemble models performance} \label{subse:ensemblemodelperformance}
-Selected ensemble models first trained with different hyper-parameters and best performing parameter selected to fit the data using number of estimators in all of the classifiers. Table below summarize the max f1 score for each classifier in training and test data. 
+Selected ensemble models first trained with different hyper-parameters and best performing parameter selected to fit the data using number of estimators in all of the classifiers. Table below summarize the max f1 score for each classifier in training and test data. Furthermore all ensemble models trained in [100, 200, 300, 400, 500] numbers of trees and their f1 score observed as well as plotted to below. Performance of the algorithm on test set drawn using dotted line and test set score drawn in solid line using same color.
 
 \begin{center}
     \begin{tabular}{||c c c||} 
@@ -289,7 +296,7 @@ If we observe the f1 score of all the classifiers in the all n\_estimators we ca
     \caption{F1 score of ensemble models.}
 \end{figure}
 
-We can investigate RandomForestClassifier predictions further by visualizing its confusion matrix.
+We can investigate RandomForestClassifier predictions further by visualizing its confusion matrix. Which show each number of correctly classified prediction in each class.
 
 \begin{figure}[H] \label{fig:rfconfusion}
     \centering
@@ -300,10 +307,139 @@ We can investigate RandomForestClassifier predictions further by visualizing its
 We can see that "CYT" (0) class is often mis-classified as "NUC" (7) and vice versa. Rest of the classes predicted well.
 
 \subsection{Over-sampling v baseline classifiers}
+As a first step over sampled dataset made available with the random over-sampling defined in subsection \ref{subsec:oversample}, number of class instances in the over-sampled data. Presented below.
 
+\begin{center}
+    \begin{tabular}{||c c c||} 
+    \hline
+    Class & Over-sampled instances & Training dataset instances\\ [0.5ex] 
+    \hline\hline
+    0 & 370 & 370\\ 
+    \hline
+    1 & 370 & 4\\
+    \hline
+    2 & 370 & 28\\
+    \hline
+    3 & 370 & 35\\
+    \hline
+    4 & 370 & 40\\
+    \hline
+    5 & 370 & 130\\
+    \hline
+    6 & 370 & 195\\
+    \hline
+    7 & 370 & 343\\
+    \hline
+    8 & 370 & 16\\
+    \hline
+    9 & 370 & 24\\ [1ex] 
+    \hline
+   \end{tabular}
+\end{center}
 
+Similar to previous subsection I trained ensemble models using number of tree parameter "n\_estimators" from 100 to 1000 incrementing 100 in each training. Same algorithm first train in the training data and them trained on over-sampled dataset. F1 scores are tested in training dataset and test data. Below is the change of the performance metric over the number of trees in the algorithm. Algorithm trained on the over-sample data denoted with "\_o" at the end of algorithm such as "RandomForestClassifier\_o".
+
+\begin{figure}[H] \label{fig:overscomp}
+    \centering
+    \includegraphics[width=\textwidth]{img/ensembleoversample.png}
+    \caption{Over-sampled v base classifiers.}
+\end{figure}
+
+Both random forest and the AdaBoost performed slightly better when they trained base dataset. 
+
+Logistic regression and support vector classifier (SVC) also trined in the both dataset to check if over-sampled data have different effect on algorithms that are not ensemble algorithms. Both of these algorithms performed slightly better in the over-sampled data than base dataset. Summary score for all the algorithms presented below.
+
+\begin{center}
+    \begin{tabular}{||c c c c c||} 
+    \hline
+    \multicolumn{5}{||c||}{F1 Scores} \\
+    \hline
+    Algorithm & \multicolumn{2}{c}{Base Dataset} & \multicolumn{2}{c||}{Over-sampled} \\
+    Name & Training & Test & Training & Test \\ [0.5ex] 
+    \hline\hline
+    RandomForest & 1.0 & 0.6686 & 1.0 & 0.6436\\ 
+    \hline
+    AdaBoost & 0.3670 & 0.3892 & 0.3302 & 0.3305\\ 
+    \hline
+    SVC & 0.5923 & 0.5981 & 0.5980 & 0.6069\\ 
+    \hline
+    LogisticRegression & 0.5847 & 0.5542 & 0.5105 & 0.5568\\ [1ex] 
+    \hline
+   \end{tabular}
+\end{center}
+
+\subsection{Under-sampling v baseline classifiers} \label{subsec:undervbase}
+
+Experimentation from previous section repeated for all the algorithms used in the previous section for the under sampling.
+Algorithms for under-sampling discussed in subsection \ref{subsec:compareundersample} and the dataset instances produced by using these presented below.
+
+\begin{center}
+    \begin{tabular}{||c c c c c||} 
+    \hline
+    Class  & Dataset & RUS & CNN & NCL\\ [0.5ex] 
+    \hline\hline
+    0 & 370 & 4 & 2 & 243\\ 
+    \hline
+    1 & 4 & 4 & 4 & 4\\
+    \hline
+    2 & 28 & 4 & 1 & 17\\
+    \hline
+    3 & 35 & 4 & 1 & 25\\
+    \hline
+    4 & 40 & 4 & 2 & 10\\
+    \hline
+    5 & 130 & 4 & 2 & 86\\
+    \hline
+    6 & 195 & 4 & 2 & 95\\
+    \hline
+    7 & 343 & 4 & 4 & 162\\
+    \hline
+    8 & 16 & 4 & 2 & 7\\
+    \hline
+    9 & 24 & 4 & 2 & 0\\ [1ex] 
+    \hline
+   \end{tabular}
+\end{center}
+
+For the case of under-sampling algorithms trined on original training set out performed under-sampled peers overwhelmingly for random under-sampling (RUS) and CondensedNearestNeighbour (CNN). NeighbourhoodCleaningRule (NCL) on the other hand performed slightly worse than baseline. These results were expected for the under-sampling case because of the reason that very few data points left in the dataset for most of the under-sampling technique. Full performance comparison provided in the table below.
+
+\begin{center}
+    \begin{tabular}{||c c c c c c c c c||} 
+    \hline
+    \multicolumn{9}{||c||}{F1 Scores} \\
+    \hline
+    Algorithm & \multicolumn{2}{c}{Base Dataset} & \multicolumn{2}{c}{RUS} & \multicolumn{2}{c}{CNN} & \multicolumn{2}{c||}{NCL}\\
+    Name & Training & Test & Training & Test & Training & Test & Training & Test\\ [0.5ex] 
+    \hline\hline
+    RandomForest & 1.0 & 0.6686 & 0.3946 & 0.4287 & 0.2708 & 0.2509 & 0.6366 & 0.6362\\ 
+    \hline
+    AdaBoost & 0.3670 & 0.3892 & 0.1330 & 0.1807 & 0.05153 & 0.0446 & 0.2903 & 0.3160\\ 
+    \hline
+    SVC & 0.5923 & 0.5981 & 0.3356 & 0.3830 & 0.1450 & 0.1447 & 0.5619 & 0.5887\\ 
+    \hline
+    LogisticRegression & 0.5847 & 0.5542 & 0.3276 & 0.3978 & 0.3291 & 0.3187 & 0.6023 & 0.5937\\ [1ex] 
+    \hline
+   \end{tabular}
+\end{center}
+
+\subsection{Scaling training data} \label{subse:scalingdata}
+
+As a final comparison dataset is scaled with min max scaler from scikit-learn \cite{scikit-learn} package. Ensemble classifiers trained on base dataset and scaled dataset to compare the effect of scaling in the data. Performance of the scaled data was considerably lower than the classifier trained on original data. One reason for this performance reduction can be relative power of the data has a fundamental importance as we can see in the confusion matrix that common mis-classification between classes increases when scaling applied to the dataset.
+
+\begin{figure}[H] \label{fig:scalecomp}
+    \centering
+    \includegraphics[width=\textwidth]{img/confusioncompare.png}
+    \caption{Comparison of same Random forest model in scaled and baseline data.}
+\end{figure}
 
 \section{Conclusion} \label{sec:conclution}
 
+In conclusion, common imbalance techniques had very limited impact on this classification problem. Under-sampling algorithms was not successful mostly because of large number of data loss when the technique applied. Over-sampling and balanced sample bootstrapped ensemble algorithms had similar performance to predictions those without. Albeit slightly less successfully. In general combination of very steep difference in imbalance of the classes and having moderately small data kept this classification problem still a challenging task.
+
 \printbibliography
+\addcontentsline{toc}{section}{References}
+
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+%\lstinputlisting[language=Python]{ml_coursework.py}
 \end{document}
