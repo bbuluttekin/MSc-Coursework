@@ -101,7 +101,7 @@
         \rule[0.5ex]{\linewidth}{2pt}\\
         [2.5cm]
     
-        \textsc{\Large Baran Buluttekin\\13153116}\\
+        \textsc{\Large Baran Buluttekin\\13153116\\bbulut02@dcs.bbk.ac.uk}\\
         [1.5cm]
         \large \textit{ I have read and understood the sections of plagiarism in the College Policy on assessment offences and confirm that the work is my own, with the work of others clearly acknowledged. I give my permission to submit my report to the plagiarism testing database that the College is using and test it using plagiarism detection software, search engines or meta-searching software.}
 
@@ -114,17 +114,19 @@
 \pagenumbering{roman}
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
-This is placeholder text. To add more information type it after this line.\\
-\cleardoublepage
 
+This report is the summary for my findings in classification of the yeast dataset \cite{data}. In the introduction general information is given about the dataset and challenges associated with this problem is laid out. Section 2 gives an background information about techniques and algorithms that will be used to solve the problem. Methodology section gives more detailed breakdown of the steps for solution. Experiments and results section will introduce metrics and summary statistics obtained from the experiments. Conclusion section will highlight general findings and offer a next steps for the improvement. 
+
+There is also appendix section at the end that includes python code used to carry out the experimentations. Even though it will produce the results of the experiments it will take a while to run due to the high number of experimentations and parameter tuning used. Therefore please consider using jupyter notebook provided with the submission to reproduction.
+
+\clearpage
 
 \tableofcontents
 \thispagestyle{empty}
-\cleardoublepage
+\clearpage
 
 \pagenumbering{arabic}
 \setcounter{page}{1}
-
 
 
 \section{Introduction} \label{sec:introduction}
@@ -180,10 +182,10 @@ This algorithm uses classic random forest \cite{randomforest} implementation and
 
 \textit{RUSBoost} \cite{rusboost} also randomly sample data in balanced way before the boosting implemented.
 
-\textit{Easy Ensemble} \cite{adaboostbalance} is a AdaBoost \cite{adaboost} implementation trained on balanced bootstrap samples.
+\textit{Easy Ensemble} \cite{adaboostbalance} is an AdaBoost \cite{adaboost} implementation trained on balanced bootstrap samples.
 
 \section{Methodology} \label{sec:method}
-As an initial step, I have loaded the dataset in a data frame using Pandas \cite{pandas} package which then allow for exploratory examination of the data. For that reason I have created a pairplot to observe if there is any linear separation is possible. With fallowing steps plot is created. All variable in the data is paired to each other except the "pox" and "erl" which behaves more like categorical data then continuous data.
+As an initial step, I have loaded the dataset in a data frame using Pandas \cite{pandas} package which then allow for exploratory examination of the data. For that reason I have created a pairplot to observe if there is any linear separation is possible. Please fallow the steps of the code snippet below to reproduce the visualization. All variable in the data is paired to each other except the "pox" and "erl" which behaves more like categorical data then continuous data.
 
 Base line machine algorithms like random forest, AdaBoost, Support vector classifier and others are part of Scikit-learn \cite{scikit-learn} package. All visualization created are achieved using Matplotlib \cite{matplotlib} and Seaborn \cite{seaborn} software packages. For reproducibility random number state is chosen and in variable named as RANDOM\_STATE. All non-deterministic algorithm uses this random generator seed.
 
@@ -210,7 +212,7 @@ sns.pairplot(df[feature_list], hue='class')
 \subsection{Data preprocessing} \label{subsec:preprocess}
 Data preprocessing is relatively simple for this dataset. There are no missing values and all data points are numeric which only leaves us to encode class variable to be able to feed into machine learning model. Judging from pairplot above classes have different range in some variable and can benefit min max scaling of the data. 
 
-In later stages some scaling algorithms will be applied to data to observe its effects in the generalization.
+In later stages some regularization algorithms will be applied to data to observe its effects in the generalization.
 
 This preparation can be streamlined with fallowing code.
 
@@ -264,11 +266,31 @@ Main choice of evaluation metric for this classification is f1 score because of 
 \end{equation*}
 Harmonic mean differ from arithmetic mean in a way that it will give more weight to low value, hence f1 score will increase only if both precision and recall increases.
 
+For each experimentation I will use Random forest, AdaBoost, logistic regression, and svm classifier to observe and compare performance of each method.
+
+Random forest classifier is an ensemble of decision trees that uses the bagging method. Data points and the features are sampled from data to create diverse set of trees. AdaBoost is also an ensemble model that uses bootstrap bagging but mainly differ by assigning a weigh and then emphasising an error in prediction with these weight to build an bagging model. Both of these algorithms will be tuned using number of trees which is implemented in the scikit-learn as "n\_estimators".
+
+Logistic regression classifier is similar to logistic regression which fits a mathematical model to underlie data and optimizing parameters $\theta$ together with a bias term $\theta_{0}$.
+
+\begin{gather*}
+    \hat{y} = \theta_{0} + \theta_{1}x_{1} + \theta_{2}x_{2} + \cdots + \theta_{n}x_{n} \\
+     \hat{y} = \theta^T \cdot x
+\end{gather*}
+
+Then this fitter equation passed to \textit{logit} function to make a prediction between 2 class (0 and 1)
+
+\begin{equation*}
+    \sigma(z) = \frac{1}{1 + e^{-z}} = \frac{1}{1 + e^{-\theta^T \cdot x}}
+\end{equation*}
+
+Despite being originally design as binary classification algorithm it can be applied to multi class classification as well. In scikit-learn this can be achieved by using multi\_class=”multinomial” option in the instance.
+
+
 In general first over-sampling and under-sampling method will be compared to classification models build on original data. Then another comparison will be drawn on balanced ensemble models versus general ensemble models which later all will be compared. This process will be repeated on the scaled data to observe scaling effect. All models will be trained with hyper-parameter tuning using cross validation.
 
 \section{Experiments and Results} \label{sec:experiment}
 \subsection{Ensemble models performance} \label{subse:ensemblemodelperformance}
-Selected ensemble models first trained with different hyper-parameters and best performing parameter selected to fit the data using number of estimators in all of the classifiers. Table below summarize the max f1 score for each classifier in training and test data. Furthermore all ensemble models trained in [100, 200, 300, 400, 500] numbers of trees and their f1 score observed as well as plotted to below. Performance of the algorithm on test set drawn using dotted line and test set score drawn in solid line using same color.
+Selected ensemble models first trained with different hyper-parameters and best performing parameter selected to fit the data using number of estimators in all of the classifiers. Table below summarize the maximum f1 score for each classifier in training and test data. Furthermore all ensemble models trained in [100, 200, 300, 400, 500] numbers of trees and their f1 score observed as well as plotted to below graph. Performance of the algorithm on test set drawn using dotted line and test set score drawn in solid line using same color.
 
 \begin{center}
     \begin{tabular}{||c c c||} 
@@ -422,9 +444,9 @@ For the case of under-sampling algorithms trined on original training set out pe
    \end{tabular}
 \end{center}
 
-\subsection{Scaling training data} \label{subse:scalingdata}
+\subsection{Using regularization} \label{subse:scalingdata}
 
-As a final comparison dataset is scaled with min max scaler from scikit-learn \cite{scikit-learn} package. Ensemble classifiers trained on base dataset and scaled dataset to compare the effect of scaling in the data. Performance of the scaled data was considerably lower than the classifier trained on original data. One reason for this performance reduction can be relative power of the data has a fundamental importance as we can see in the confusion matrix that common mis-classification between classes increases when scaling applied to the dataset.
+As a final comparison dataset is scaled with min max regularizer from scikit-learn \cite{scikit-learn} package. Ensemble classifiers trained on base dataset and scaled dataset to compare the effect of scaling in the data. Performance of the scaled data was considerably lower than the classifier trained on original data. One reason for this performance reduction can be relative power of the data has a fundamental importance as we can see in the confusion matrix that common mis-classification between classes increases when scaling applied to the dataset.
 
 \begin{figure}[H] \label{fig:scalecomp}
     \centering
@@ -436,10 +458,12 @@ As a final comparison dataset is scaled with min max scaler from scikit-learn \c
 
 In conclusion, common imbalance techniques had very limited impact on this classification problem. Under-sampling algorithms was not successful mostly because of large number of data loss when the technique applied. Over-sampling and balanced sample bootstrapped ensemble algorithms had similar performance to predictions those without. Albeit slightly less successfully. In general combination of very steep difference in imbalance of the classes and having moderately small data kept this classification problem still a challenging task.
 
+Further improvements can be achieve by training different models or trying additional techniques such as stacking to gain more accuracy.
+
 \printbibliography
 \addcontentsline{toc}{section}{References}
 
 \section*{Appendix}
 \addcontentsline{toc}{section}{Appendix}
-%\lstinputlisting[language=Python]{ml_coursework.py}
+\lstinputlisting[language=Python]{ml_coursework.py}
 \end{document}
