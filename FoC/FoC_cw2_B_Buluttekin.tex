@@ -1,0 +1,279 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in,left=1.2in,includefoot]{geometry}
+\usepackage{enumerate}
+\usepackage{longtable}
+\usepackage{forest}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\forestset{
+  nice nodes/.style={
+  for tree={
+  inner sep=1pt, s sep=12pt,
+  fit=band,
+},
+},
+default preamble=nice nodes,
+}
+\useforestlibrary{linguistics}
+\forestapplylibrarydefaults{linguistics}
+
+\begin{document}
+    \begin{titlepage}
+        \begin{center}
+            \vspace*{.06\textheight}{\scshape\LARGE Birkbeck, University of London\par}\vspace{1.5cm} % University name
+            \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
+            \rule[0.5ex]{\linewidth}{1pt}\\[\baselineskip]
+            %title of the report
+            \huge{\bfseries Fundamentals of Computing\\Coursework 2}\\[4mm]
+            \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+            \rule[0.5ex]{\linewidth}{2pt}\\
+            [2.5cm]
+        
+            \textsc{\Large Baran Buluttekin\\13153116}\\
+            [1.5cm]
+            \large \textit{ I have read and understood the sections of plagiarism in the College Policy on assessment offences and confirm that the work is my own, with the work of others clearly acknowledged. I give my permission to submit my report to the plagiarism testing database that the College is using and test it using plagiarism detection software, search engines or meta-searching software.}
+
+
+        \end{center}
+    \end{titlepage}
+
+    \section*{Answers}
+    \begin{itemize}
+        \item Baran Buluttekin
+        \item Summation of values = 171
+        \item Line number = 72
+        \item X = 1 its 5th word
+        \item words = consisted developing application area with which computer scientist would necessarily familiar such chemical testing dealing
+        \item four letter version = cons, deve, appl, area, with, whic, comp, scie, woul, nece, fami, such, chem, test, deal  
+    \end{itemize}
+    \begin{enumerate}
+        \item Threaded binary tree:
+        
+        \begin{forest}
+            [HEAD, name=HEAD, draw    
+                [cons, name=cons   [appl, name=appl   [,.phantom]
+                                [area, name=area 
+                                    [,.phantom]
+                                    [comp, name=comp
+                                        [chem]{\draw[->,dotted] () to [out=east, in=south] (comp);
+                                        \draw[->,dotted] () to [out=west, in=south] (area);} 
+                                        [,.phantom]
+                                    ]{\draw[->,dotted] () to [out=east, in=south] (cons);} 
+                                ]{\draw[->,dotted] () to [out=west, in=west] (appl);} 
+                        ]{\draw[->,dotted] () to [out=west, in=west] (HEAD);} 
+                        [deve, name=deve   
+                                [deal]{\draw[->,dotted] () to [out=east, in=south] (deve);
+                                \draw[->,dotted] () to [out=west, in=south] (cons);} 
+                                [with, name=with
+                                    [whic, name=whic 
+                                        [scie, name=scie 
+                                            [nece, name=nece
+                                                [fami]{\draw[->,dotted] () to [out=east, in=south] (nece);
+                                                \draw[->,dotted] () to [out=west, in=south] (deve);}
+                                                [,.phantom]
+                                            ]{\draw[->,dotted] () to [out=south east, in=south] (scie);}
+                                            [such, name=such
+                                                [,.phantom]
+                                                [test]{\draw[->, dotted] () to [out=south west,in=south] (such);
+                                                \draw[->, dotted] () to [out=south east,in=east] (whic); }
+                                            ]{\draw[->,dotted] () to [out=south west, in=south] (scie);}
+                                        ]
+                                        [,.phantom]
+                                    ]{\draw[->,dotted] () to [out=east, in=south] (with);}
+                                    [woul]{\draw[->,dotted] () to [out=east, in=east] (HEAD);
+                                    \draw[->,dotted] () to [out=west, in=south] (with);}
+                                ]
+                        ]
+                ]
+                [,.phantom]
+            ]{\draw[->,dotted] () to [out=south east, in=north east] (HEAD);}    
+            \end{forest}
+        \item \textit{Post-order} traversed: chem, comp, area, appl, deal, fami, nece, test, such, scie, whic, woul, with, deve, cons
+        \item Traversed \textit{pre-order} with algorithm from p.16: cons, appl, area, comp, chem, deve, deal, with, whic, scie, nece, fami, such, test, woul
+        
+        For the stack below left most item represent the first item in and right most item is the last item get in to the stack. Words crossed out represent item that was in the stack but popped out.
+        
+        My $3^{th}$ node is appl,\\
+        Nodes visited: cons, appl \\
+        Stack: cons \\
+
+        My $6^{th}$ node is whic,\\
+        Nodes visited: cons, appl, area, comp, chem, deve, deal, with, whic\\
+        Stack: \sout{cons}, \sout{appl}, \sout{area}, \sout{comp}, \sout{chem}, \sout{deve}, \sout{deal}, with \\
+
+        My $9^{th}$ node is woul, \\
+        Nodes visited: cons, appl, area, comp, chem, deve, deal, with, whic, scie, nece, fami, such, test, woul\\
+        Stack: \sout{comp, appl, area, comp, chem, deve, deal, with, whic, scie, nece, fami, such, test}\\
+
+        My $12^{th}$ node is such,\\
+        Nodes visited: cons, appl, area, comp, chem, deve, deal, with, whic, scie, nece, fami, such\\
+        Stack: \sout{cons}, \sout{appl}, \sout{area}, \sout{comp}. \sout{chem}, \sout{deve}, \sout{deal}, with, whic, \sout{scie}, \sout{nece}, \sout{fami}\\
+
+        \item $1^{st}$ item is cons, when removed:
+        \begin{center}
+        \begin{forest}
+            [deal
+                [appl
+                    [,.phantom]
+                    [area
+                        [,.phantom]
+                        [comp
+                            [chem]
+                            [,.phantom]
+                        ]
+                    ]
+                ]
+                [deve
+                    [,.phantom]
+                    [with
+                        [whic
+                            [scie
+                                [nece
+                                    [fami]
+                                    [,.phantom]
+                                ]
+                                [such
+                                    [,.phantom]
+                                    [test]
+                                ]
+                            ]
+                            [,.phantom]
+                        ]
+                        [woul]
+                    ]
+                ]
+            ]
+        \end{forest}
+    \end{center}
+
+    $2^{nd}$ item is deve, when removed:
+    
+    \begin{center}
+        \begin{forest}
+            [deal
+                [appl
+                    [,.phantom]
+                    [area
+                        [,.phantom]
+                        [comp
+                            [chem]
+                            [,.phantom]
+                        ]
+                    ]
+                ]
+                [fami
+                    [,.phantom]
+                    [with
+                        [whic
+                            [scie
+                                [nece]
+                                [such
+                                    [,.phantom]
+                                    [test]
+                                ]
+                            ]
+                            [,.phantom]
+                        ]
+                        [woul]
+                    ]
+                ]
+            ]
+        \end{forest}
+    \end{center}
+
+    $3^{rd}$ item is appl, when removed:
+
+    \begin{center}
+        \begin{forest}
+            [deal
+                [area
+                    [,.phantom]
+                    [comp
+                        [chem]
+                        [,.phantom]
+                    ]
+                ]
+                [fami
+                    [,.phantom]
+                    [with
+                        [whic
+                            [scie
+                                [nece]
+                                [such
+                                    [,.phantom]
+                                    [test]
+                                ]
+                            ]
+                            [,.phantom]
+                        ]
+                        [woul]
+                    ]
+                ]
+            ]
+        \end{forest}
+    \end{center}
+    \item We will obtain 4 fallowing trees.
+    
+    $1^{st} tree:$
+    \begin{center}
+        \begin{forest}
+            [cons
+                [appl]
+                [area]
+                [comp
+                    [chem]
+                ]
+            ]
+        \end{forest}
+    \end{center}
+
+    $2^{nd} tree:$
+    \begin{center}
+        \begin{forest}
+            [deve
+                [deal]
+            ]
+        \end{forest}
+    \end{center}
+
+    $3^{rd} tree:$
+    \begin{center}
+    \begin{forest}
+        [with
+            [whic
+                [scie
+                    [nece
+                        [fami]
+                    ]
+                ]
+                [such]
+                [test]
+            ]
+        ]
+    \end{forest}
+    \end{center}
+
+    $4^{th} tree:$
+    \begin{center}
+        Node: woul
+    \end{center}
+    
+    \item Algorithm:
+
+    \begin{lstlisting}[mathescape=true]
+        void pre(Treenode P)
+        {
+            visit(P);
+            pre-treverse(P$\uparrow$LLINK);
+            pre-treverse(P$\uparrow$RLINK);
+        }
+    \end{lstlisting}
+
+
+    \end{enumerate}
+
+\end{document}
