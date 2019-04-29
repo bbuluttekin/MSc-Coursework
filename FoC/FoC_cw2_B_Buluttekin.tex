@@ -8,6 +8,13 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfig}
+
+\lstset{%
+   breaklines=true
+}
 
 \forestset{
   nice nodes/.style={
@@ -261,18 +268,136 @@ default preamble=nice nodes,
     \begin{center}
         Node: woul
     \end{center}
+    \clearpage
     
     \item Algorithm:
 
     \begin{lstlisting}[mathescape=true]
-        void pre(Treenode P)
+        void FindLinkedNode(DataValue k, Treenode ROOT)
         {
-            visit(P);
-            pre-treverse(P$\uparrow$LLINK);
-            pre-treverse(P$\uparrow$RLINK);
+            P $\leftarrow$ ROOT;
+            // Find the node N
+            while (P$\uparrow$INFO $\neq$ k)
+            {
+                P $\leftarrow$ P$\uparrow$LLINK if (P$\uparrow$INFO > k) else P$\uparrow$RLINK;
+            }
+            if (P = nil)
+                repot_not_found();
+            else
+            { // Find the head node by moving along nodes head node will have a pinter Q
+                Q $\leftarrow$ P$\uparrow$SUCC;
+                while (Q$\uparrow$INFO $\neq$ 9999)
+                {
+                    Q $\leftarrow$ Q$\uparrow$SUCC;
+                }
+                // Once found delete the head note to replace to new position
+                if (Q$\uparrow$SUCC $\neq$ P)
+                {
+                    Back $\leftarrow$ Q$\uparrow$PRED;
+                    Front $\leftarrow$ Q$\uparrow$SUCC;
+                    Back$\uparrow$SUCC $\leftarrow$ Front;
+                    Front$\uparrow$PRED $\leftarrow$ Back;
+                    // Insert head node after node N
+                    Prev $\leftarrow$ P$\uparrow$PRED;
+                    Prev$\uparrow$SUCC $\leftarrow$ Q;
+                    Q$\uparrow$PRED $\leftarrow$ Prev;
+                    Q$\uparrow$SUCC $\leftarrow$ P;
+                    P$\uparrow$PRED $\leftarrow$ Q;
+                }
+            }
         }
     \end{lstlisting}
+    \clearpage
 
+    \item B-tree examples
+    
+    \textbf{Strategy for data-pages: }
+    \begin{enumerate}
+        \item Odd number items will always be on the left-hand page.
+        \item When merging a page, I will always merge with the left-hand page. Unless the page doesn't have a left page or merging with left-hand page cause overflowing data-page.
+    \end{enumerate}
+
+    m = 6 r = 6\\
+    Inserting JAM:
+
+    This item will be inserted to data page of [HIP, $\cdots$, MUD]. This data page have one more record space available, record can be added without any split.
+
+    \begin{figure}[H] \label{fig:insertjam}
+        \centering
+        \includegraphics[width=\textwidth]{img/insertjam.png}
+    \end{figure}
+
+    Inserting OWL:
+
+    This record should be inserted to data-page of [NAG, $\cdots$, SUN]. This page have already 6 item, adding this record will split the page. Final result will have max number of pointer page.
+
+    \begin{figure}[H] \label{fig:insertowl}
+        \centering
+        \includegraphics[width=\textwidth]{img/insertowl.png}
+    \end{figure}
+
+    Inserting NET:
+
+    Does not cause split just inserted.
+
+    \begin{figure}[H] \label{fig:insertnet}
+        \centering
+        \includegraphics[width=\textwidth]{img/insertnet.png}
+    \end{figure}
+
+    Inserting OXO:
+
+    Does not cause any split but the data-page it goes into have maximum number of data.
+
+    \begin{figure}[H] \label{fig:insertoxo}
+        \centering
+        \includegraphics[width=\textwidth]{img/insertoxo.png}
+    \end{figure}
+
+    Inserting LOG:
+
+    This will go to data-page [HIP, $\cdots$, MUD]. Result is a split data-page. Because the maximum number of pointer pages reached in this level the key we obtain will go to layer up.
+
+    \begin{figure}[H] \label{fig:insertlog}
+        \centering
+        \includegraphics[width=\textwidth]{img/insertlog.png}
+    \end{figure}
+
+    \item Deletion 
+    
+    m = 5 and r = 4\\
+    Deleting RIM:
+
+    When RIM is deleted data-page it was occupying will have less than min number record and needs to be merged with another page. Because there is no left page in this pointer page I merged it with right data-page. and key SAG not in use can be removed. Removing that key will leave that pointer page less than minimum number of pointer pages and we ca merge it with left pointer page to avoid it. Top level key PIN no longer required and we can bring it to lover level to pointer-page.
+    \begin{figure}[H] \label{fig:deleterim}
+        \centering
+        \includegraphics[width=\textwidth]{img/deleterim.png}
+    \end{figure}
+
+    Deleting ALE:
+
+    When we delete ALE data-page it was in will have to merge. In this case there is no left page thats why I merged it with right page. It's pointer page no longer in use can deleted.
+    \begin{figure}[H] \label{fig:deleteale}
+        \centering
+        \includegraphics[width=\textwidth]{img/deleteale.png}
+    \end{figure}
+
+    Deleting COW:
+
+    Deleting COW also require merging. When merged CAT key is not needed and can be deleted. After the key deleted this pointer page does not have enough data-page and have to be merged with next pointer-page. Upper level HUT is used in merging but the end result have more than maximum number of pointer-pages. I split the pointer pages by taking KIP key to upper level.
+    \begin{figure}[H] \label{fig:deletecow}
+        \centering
+        \includegraphics[width=\textwidth]{img/deletecow.png}
+    \end{figure}
+
+    \item Delete RAT:
+    
+    m = 5 and r = 4\\
+    When the RAT is deleted data-page have to merge with left data-page and key PIN can be deleted. Result then have insufficient number of pointer pages. Have to be merged with left pointer page by bringing the top level key FOX down.
+    \begin{figure}[H] \label{fig:deleterat}
+        \centering
+        \includegraphics[width=\textwidth]{img/deleterat.png}
+    \end{figure}
 
     \end{enumerate}
 
