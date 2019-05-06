@@ -1,5 +1,6 @@
 # List of combined pairs
 
+import sys
 X = sorted([int(x) for x in input().split(' ')])
 Y = sorted([int(x) for x in input().split(' ')])
 
@@ -37,8 +38,6 @@ M = create_matrix(m, n)
 print(M)
 
 # Higher Order Functions
-
-import sys
 
 
 def stringify(f):

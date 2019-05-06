@@ -16,8 +16,8 @@ class ManhattanTaxi:
         self.pos = (self.X, self.Y)
         return True
 
-    def add_fuel(self):
-        self.fuel += self.fuel
+    def add_fuel(self, xtfuel):
+        self.fuel += xtfuel
 
 
 if __name__ == "__main__":
