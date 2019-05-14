@@ -34,7 +34,24 @@ def search(search_str, lst, size):
         return found
 
 
+def guess_number():
+    import random
+    number = random.randint(0, 99)
+    guesses = 0
+    start = int(input("Guess a number between 0 and 99: "))
+    guesses += 1
+    while start != number:
+        if number < start:
+            start = int(input("Too high. Guess again: "))
+            guesses += 1
+        else:
+            start = int(input("Too low. Guess again: "))
+            guesses += 1
+    print("Correct. It took you {} guesses.".format(guesses))
+
+
 if __name__ == "__main__":
     Fibonacci(20)
     fib2000()
     assert search("abb", ["xyz", "abc", "abbc", "abb"], 5) == 2
+    guess_number()
