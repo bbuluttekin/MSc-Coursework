@@ -9,6 +9,7 @@ word_count_out/
 pagerank_out/
 *.txt
 .mrjob.conf
+.latexmkrc
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
