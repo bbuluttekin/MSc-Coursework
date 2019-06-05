@@ -54,4 +54,4 @@ if __name__ == "__main__":
     Fibonacci(20)
     fib2000()
     assert search("abb", ["xyz", "abc", "abbc", "abb"], 5) == 2
-    guess_number()
+    # guess_number()
